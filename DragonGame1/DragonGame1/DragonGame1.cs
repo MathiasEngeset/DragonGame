@@ -24,7 +24,8 @@ namespace DragonGame1
         List<Bushbackground> farBackgroundList;
         List<Bushbackground> nearBackgroundList;
         List<walkingground> walkinggroundList;
-        List<walkingground> walkwayList;       
+        List<walkingground> walkwayList;
+        List<GoldCoin> goldCoinList;
 
         public DragonGame1()
         {
@@ -48,6 +49,7 @@ namespace DragonGame1
             nearBackgroundList = new List<Bushbackground>();
             walkinggroundList = new List<walkingground>();
             walkwayList = new List<walkingground>();
+            goldCoinList = new List<GoldCoin>();
             mKnightSprite = new Knight();
             mdragonSprite = new dragon();
        
@@ -129,6 +131,10 @@ namespace DragonGame1
             walkwayList.Add(new walkingground("Walkway 2 W", this.Content, 64 * 14, 130));
             walkwayList.Add(new walkingground("Walkway 1 E", this.Content, 64 * 15, 130));
 
+            goldCoinList.Add(new GoldCoin(this.Content, 600, 300));
+            goldCoinList.Add(new GoldCoin(this.Content, 100, 230));
+            goldCoinList.Add(new GoldCoin(this.Content, 800, 400));
+            goldCoinList.Add(new GoldCoin(this.Content, 400, 100));
 
             mKnightSprite.LoadContent(this.Content);
             mdragonSprite.LoadContent(this.Content);
@@ -164,6 +170,10 @@ namespace DragonGame1
                 mKnightSprite.CollideWithFireBall(fireball);
             }
 
+            foreach (GoldCoin goldcoin in goldCoinList){
+                goldcoin.Update(gameTime);
+            }
+
             //Maks knight fall if knight is no longer on ground.
             mKnightSprite.isPlayerStandingOnGround = false;
             //Check if knight is on ground
@@ -175,6 +185,12 @@ namespace DragonGame1
             foreach (walkingground ground in walkinggroundList)
             {
                 mKnightSprite.CollideWithWalkingGround(ground, 128, 128);
+            }
+
+            //Check if knight collects coin
+            foreach (GoldCoin coin in goldCoinList)
+            {
+                mKnightSprite.CollideWithGoldCoin(coin);
             }
 
             base.Update(gameTime);
@@ -207,6 +223,10 @@ namespace DragonGame1
 
             foreach (walkingground walkway in walkwayList) {
                 walkway.Draw(spriteBatch);
+            }
+
+            foreach (GoldCoin goldcoin in goldCoinList) {
+                goldcoin.Draw(spriteBatch);
             }
 
             mKnightSprite.Draw(this.spriteBatch);

@@ -246,17 +246,29 @@ namespace DragonGame1
             }
         }
 
+        //Detects is knight is walking on ground.
         public void CollideWithWalkingGround(walkingground ground, int groundWidth, int groundHeight) {
             Rectangle knightRectangle = new Rectangle((int)Position.X, (int)Position.Y, _knightFrameSizeWidth, _knightFrameSizeHeight);
             Rectangle groundRecktangle = new Rectangle((int)ground.Position.X, (int)ground.Position.Y, groundWidth, groundHeight);
             if (knightRectangle.Intersects(groundRecktangle))
             {
-                //Todo: detect if knight is walking on ground
                 if (knightRectangle.Bottom < groundRecktangle.Top + 8 && knightRectangle.Bottom > groundRecktangle.Top - 2)
                 {
                     isPlayerStandingOnGround = true;
                 }
    
+            }
+        }
+
+        //Collision detection for gold coins
+        public void CollideWithGoldCoin(GoldCoin coin)
+        {
+            Rectangle knightRectangle = new Rectangle((int)Position.X, (int)Position.Y, _knightFrameSizeWidth, _knightFrameSizeHeight);
+            Rectangle coinRecktangle = new Rectangle((int)coin.Position.X, (int)coin.Position.Y, coin.GetWidth(), coin.GetHeight());
+            if (knightRectangle.Intersects(coinRecktangle))
+            {
+                coin.GenerateNewPosition();
+                //Todo: get point for getting coin
             }
         }
 
