@@ -19,7 +19,12 @@ namespace DragonGame1
         }
         State mCurrentState = State.Walking;
         Vector2 mStartingPosition = Vector2.Zero;
-     
+
+        //Initialize it to 0
+        float AlphaTimeSubtract = 0.0f;
+        float AlphaTime = 350f;
+        Color color = Color.White;
+
         Vector2 _Direction = Vector2.Zero;
         Vector2 _Speed = Vector2.Zero;
         private Texture2D SpriteTexture;
@@ -34,15 +39,20 @@ namespace DragonGame1
         private int frameCounter = 0;
         private float _totalElapsed = 0;
         private float _timePerFrame = 0.2f;
+        public bool isPlayerStandingOnGround = false;
+        private bool _isOnWayDownInJump = false;
+        private DateTime _hitStartTime = DateTime.MinValue;
+        private bool _isHit = false;
+        private int _secondsWhenHit = 3;
 
         const string KNIGHT_ASSETNAME = "Knightsheet";
         const int START_POSITION_X = 125;
-        const int START_POSITION_Y = 510;
-        const int KNIGHT_SPEED = 160;
-        const int MOVE_UP = -1;
-        const int MOVE_DOWN = 1;
-        const int MOVE_LEFT = -1;
-        const int MOVE_RIGHT = 1;
+        const int START_POSITION_Y = 50;
+        const int KNIGHT_SPEED = 140;
+        const int MOVE_UP = -2;
+        const int MOVE_DOWN = 2;
+        const int MOVE_LEFT = -2;
+        const int MOVE_RIGHT = 2;
 
         //load methode
         public void LoadContent(ContentManager theContentManager)
@@ -51,16 +61,24 @@ namespace DragonGame1
             SpriteTexture = theContentManager.Load<Texture2D>(KNIGHT_ASSETNAME);
         }
 
-        public void Update(GameTime TheGameTime)
+        public void Update(GameTime theGameTime)
         {
             KeyboardState aCurrentKeyboardState = Keyboard.GetState();
-            UpdateMovement(aCurrentKeyboardState, (float)TheGameTime.ElapsedGameTime.TotalSeconds);
+            UpdateMovement(aCurrentKeyboardState, (float)theGameTime.ElapsedGameTime.TotalSeconds);
             UpdateJump(aCurrentKeyboardState);
+            IsWalkingOrFalling();
+            UpdateHit();
 
             mPreviousKeyboardState = aCurrentKeyboardState;
-           
+
+            if (_isHit) {
+                //Then in the update method increase it (The inverse logic you used in the opaque --> transparent effect)
+                AlphaTimeSubtract += (float)(theGameTime.ElapsedGameTime.TotalMilliseconds);
+                color = Color.White * MathHelper.Clamp(AlphaTimeSubtract / AlphaTime, 0, 1);
+            }
+            
             //Updates knights position
-            Position += _Direction * KNIGHT_SPEED * (float)TheGameTime.ElapsedGameTime.TotalSeconds;
+            Position += _Direction * KNIGHT_SPEED * (float)theGameTime.ElapsedGameTime.TotalSeconds;
         }
 
         private void UpdateJump(KeyboardState aCurrentKeyboardState)
@@ -75,8 +93,10 @@ namespace DragonGame1
 
             if (mCurrentState == State.Jumping)
             {
-                if (mStartingPosition.Y - Position.Y > 170)
+                
+                if (mStartingPosition.Y - Position.Y > 190)
                 {
+                    _isOnWayDownInJump = true;
                     _Direction.Y = MOVE_DOWN;
                 }
 
@@ -85,11 +105,12 @@ namespace DragonGame1
                     Position.Y = mStartingPosition.Y;
                     mCurrentState = State.Walking;
                     _Direction = Vector2.Zero;
-                }
+                    _isOnWayDownInJump = false;
+                }   
             }
         }
 
-
+        //Moves the knight in left or right direction.
         private void UpdateMovement(KeyboardState aCurrentKeyboardState, float elapsed)
         {
             _totalElapsed += elapsed;
@@ -136,24 +157,27 @@ namespace DragonGame1
                     }
                     _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
                 }
+            }
+        }
 
-                if (aCurrentKeyboardState.IsKeyDown(Keys.Up) == true)
-                {
-                    _Speed.Y = KNIGHT_SPEED;
-                    _Direction.Y = MOVE_UP;
-                }
+        private void UpdateHit() {
+            if (_hitStartTime != DateTime.MinValue)
+            {
+                if (AlphaTimeSubtract > 500.0f)
+                    AlphaTimeSubtract = 0.0f;
 
-                else if (aCurrentKeyboardState.IsKeyDown(Keys.Down) == true)
+                if (_hitStartTime.AddSeconds(_secondsWhenHit).TimeOfDay < DateTime.Now.TimeOfDay)
                 {
-                    _Speed.Y = KNIGHT_SPEED;
-                    _Direction.Y = MOVE_DOWN;
+                    _isHit = false;
+                    AlphaTimeSubtract = 0.0f;
                 }
             }
-            
         }
+
+        //Makes the knight jump.
         private void Jump ()
         {
-            if(mCurrentState != State.Jumping)
+            if (mCurrentState != State.Jumping && isPlayerStandingOnGround)
             {
                 mCurrentState = State.Jumping;
                 mStartingPosition = Position;
@@ -162,24 +186,63 @@ namespace DragonGame1
             }
         }
 
+        //The knight is hit by a fireball
+        private void HitKnight() {
+            if (!_isHit) {
+                _hitStartTime = DateTime.Now;
+                _isHit = true;
+            }
+
+        }
+
+        //Method for checking if knight is falling or walking on ground.
+        private void IsWalkingOrFalling() {
+            //Check if knight is standing on ground or falling down.
+            if (isPlayerStandingOnGround)
+            {
+                if (mCurrentState == State.Jumping && _isOnWayDownInJump)
+                {
+                    _Speed.Y = 0;
+                    _Direction.Y = 0;
+                    _isOnWayDownInJump = false;
+                    mCurrentState = State.Walking;
+                }
+                else if (mCurrentState != State.Jumping)
+                {
+                    _Speed.Y = 0;
+                }
+            }
+            else if (mCurrentState != State.Jumping)
+            {
+                //Gravity.
+                _Speed.Y = KNIGHT_SPEED;
+                _Direction.Y = MOVE_DOWN;
+            }
+        }
 
         //Collisjon detection
         public void CollideWithFireBall(FireBall fireball) {
             Rectangle knightRectangle = new Rectangle((int)Position.X, (int)Position.Y, _knightFrameSizeWidth, _knightFrameSizeHeight);
             Rectangle fireballRecktangle = new Rectangle((int)fireball.Position.X, (int)fireball.Position.Y, fireball.GetWidth(), fireball.GetHeight());
             if (knightRectangle.Intersects(fireballRecktangle)) {
-                
-                if (this.Position.X < fireball.Position.X)
+
+                if (_isHit == false)
                 {
-                    this.Position.X += -15;
+                    if (this.Position.X < fireball.Position.X)
+                    {
+                        this.Position.X += -15;
+                    }
+                    else
+                    {
+                        this.Position.X += 15;
+                    }
+                    fireball.Visible = false;
+                    fireball.Position.X = 0;
+                    fireball.Position.Y = 0;
                 }
-                else {
-                    this.Position.X += 15;
-                }
-                fireball.Visible = false;
-                fireball.Position.X = 0;
-                fireball.Position.Y = 0;
-   
+
+                HitKnight();
+
             }
         }
 
@@ -188,15 +251,19 @@ namespace DragonGame1
             Rectangle groundRecktangle = new Rectangle((int)ground.Position.X, (int)ground.Position.Y, groundWidth, groundHeight);
             if (knightRectangle.Intersects(groundRecktangle))
             {
-               //Todo: detect if knight is walking on ground
-
+                //Todo: detect if knight is walking on ground
+                if (knightRectangle.Bottom < groundRecktangle.Top + 8 && knightRectangle.Bottom > groundRecktangle.Top - 2)
+                {
+                    isPlayerStandingOnGround = true;
+                }
+   
             }
         }
 
         //draw the sprite to the screen
         public void Draw(SpriteBatch theSpriteBatch)
         {
-            theSpriteBatch.Draw(SpriteTexture, Position, new Rectangle(_knightCurrentFrameX, _knightCurrentFrameY, _knightFrameSizeWidth, _knightFrameSizeHeight), Color.White);
+            theSpriteBatch.Draw(SpriteTexture, Position, new Rectangle(_knightCurrentFrameX, _knightCurrentFrameY, _knightFrameSizeWidth, _knightFrameSizeHeight), color);
         }
 
     }//END CLASS

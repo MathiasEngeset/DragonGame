@@ -164,8 +164,17 @@ namespace DragonGame1
                 mKnightSprite.CollideWithFireBall(fireball);
             }
 
+            //Maks knight fall if knight is no longer on ground.
+            mKnightSprite.isPlayerStandingOnGround = false;
+            //Check if knight is on ground
             foreach (walkingground ground in walkwayList) {
-                mKnightSprite.CollideWithWalkingGround(ground, 64, 130);
+                mKnightSprite.CollideWithWalkingGround(ground, 64, 64);
+            }
+
+            //Check if knight is on ground
+            foreach (walkingground ground in walkinggroundList)
+            {
+                mKnightSprite.CollideWithWalkingGround(ground, 128, 128);
             }
 
             base.Update(gameTime);
