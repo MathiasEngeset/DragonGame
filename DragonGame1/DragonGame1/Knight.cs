@@ -93,6 +93,17 @@ namespace DragonGame1
 
             if (mCurrentState == State.Jumping)
             {
+
+                if (Position.X < 0)
+                {
+                    _Speed.X = 0;
+                    _Direction.X = 0;
+                }
+
+                if (Position.X > (1024 - _knightFrameSizeWidth)) {
+                    _Speed.X = 0;
+                    _Direction.X = 0;
+                }
                 
                 if (mStartingPosition.Y - Position.Y > 190)
                 {
@@ -122,8 +133,16 @@ namespace DragonGame1
 
                 if (aCurrentKeyboardState.IsKeyDown(Keys.Left) == true)
                 {
-                    _Speed.X = KNIGHT_SPEED;
-                    _Direction.X = MOVE_LEFT;
+                    if (Position.X < 0)
+                    {
+                        _Speed.X = 0;
+                        _Direction.X = 0;
+                    }
+                    else
+                    {
+                        _Speed.X = KNIGHT_SPEED;
+                        _Direction.X = MOVE_LEFT;
+                    }
                     if (_totalElapsed > _timePerFrame)
                     {
                         if (frameCounter >= 2)
@@ -141,8 +160,16 @@ namespace DragonGame1
 
                 else if (aCurrentKeyboardState.IsKeyDown(Keys.Right) == true)
                 {
-                    _Speed.X = KNIGHT_SPEED;
-                    _Direction.X = MOVE_RIGHT;
+                    if (Position.X > (1024 - _knightFrameSizeWidth))
+                    {
+                        _Speed.X = 0;
+                        _Direction.X = 0;
+                    }
+                    else {
+                        _Speed.X = KNIGHT_SPEED;
+                        _Direction.X = MOVE_RIGHT;
+                    }
+                    
                     if (_totalElapsed > _timePerFrame)
                     {
                         if (frameCounter <= 3)
@@ -160,6 +187,7 @@ namespace DragonGame1
             }
         }
 
+        //Checks status on hits on knight
         private void UpdateHit() {
             if (_hitStartTime != DateTime.MinValue)
             {
