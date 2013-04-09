@@ -11,7 +11,7 @@ namespace DragonGame1
     public class FireBall
     {
         const string FIREBALL_ASSETNAME = "fireballs";
-        const int DISTANCE = 800;
+        const int DISTANCE = 620;
         public bool Visible = false;
         Vector2 _StartPosition;
         Vector2 _Speed;

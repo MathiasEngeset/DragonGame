@@ -23,8 +23,8 @@ namespace DragonGame1
             Walking,
             Jumping
         }
-        State mCurrentState = State.Walking;
-        Vector2 mStartingPosition = Vector2.Zero;
+        State _CurrentState = State.Walking;
+        Vector2 _StartingPosition = Vector2.Zero;
 
         //Initialize it to 0
         float AlphaTimeSubtract = 0.0f;
@@ -35,7 +35,7 @@ namespace DragonGame1
         Vector2 _Speed = Vector2.Zero;
         private Texture2D SpriteTexture;
         public Vector2 Position = new Vector2(0, 0);
-        KeyboardState mPreviousKeyboardState;
+        KeyboardState _PreviousKeyboardState;
         
 
         private const int _knightFrameSizeWidth = 169;
@@ -63,7 +63,7 @@ namespace DragonGame1
         //load methode
         public void LoadContent(ContentManager theContentManager)
         {
-            Launch = theContentManager.Load<SoundEffect>("loud_big_explosion");
+            Launch = theContentManager.Load<SoundEffect>("explosion_2");
             Position = new Vector2(START_POSITION_X, START_POSITION_Y);
             SpriteTexture = theContentManager.Load<Texture2D>(KNIGHT_ASSETNAME);
         }
@@ -76,7 +76,7 @@ namespace DragonGame1
             IsWalkingOrFalling();
             UpdateHit();
 
-            mPreviousKeyboardState = aCurrentKeyboardState;
+            _PreviousKeyboardState = aCurrentKeyboardState;
 
             if (_isHit) {
                 //Then in the update method increase it (The inverse logic you used in the opaque --> transparent effect)
@@ -90,15 +90,15 @@ namespace DragonGame1
 
         private void UpdateJump(KeyboardState aCurrentKeyboardState)
         {
-            if (mCurrentState == State.Walking) { 
+            if (_CurrentState == State.Walking) { 
             }
 
-            if (aCurrentKeyboardState.IsKeyDown(Keys.Space) == true && mPreviousKeyboardState.IsKeyDown(Keys.Space) == false)
+            if (aCurrentKeyboardState.IsKeyDown(Keys.Space) == true && _PreviousKeyboardState.IsKeyDown(Keys.Space) == false)
             {
                 Jump();
             }
 
-            if (mCurrentState == State.Jumping)
+            if (_CurrentState == State.Jumping)
             {
 
                 if (Position.X < 0)
@@ -112,16 +112,16 @@ namespace DragonGame1
                     _Direction.X = 0;
                 }
                 
-                if (mStartingPosition.Y - Position.Y > 190)
+                if (_StartingPosition.Y - Position.Y > 190)
                 {
                     _isOnWayDownInJump = true;
                     _Direction.Y = MOVE_DOWN;
                 }
 
-                if (Position.Y > mStartingPosition.Y)
+                if (Position.Y > _StartingPosition.Y)
                 {
-                    Position.Y = mStartingPosition.Y;
-                    mCurrentState = State.Walking;
+                    Position.Y = _StartingPosition.Y;
+                    _CurrentState = State.Walking;
                     _Direction = Vector2.Zero;
                     _isOnWayDownInJump = false;
                 }   
@@ -133,7 +133,7 @@ namespace DragonGame1
         {
             _totalElapsed += elapsed;
 
-            if (mCurrentState == State.Walking)
+            if (_CurrentState == State.Walking)
             {
                 _Speed = Vector2.Zero;
                 _Direction = Vector2.Zero;
@@ -205,6 +205,7 @@ namespace DragonGame1
                 {
                     _isHit = false;
                     AlphaTimeSubtract = 0.0f;
+                    color = Color.White;
                 }
             }
         }
@@ -212,10 +213,10 @@ namespace DragonGame1
         //Makes the knight jump.
         private void Jump ()
         {
-            if (mCurrentState != State.Jumping && isPlayerStandingOnGround)
+            if (_CurrentState != State.Jumping && isPlayerStandingOnGround)
             {
-                mCurrentState = State.Jumping;
-                mStartingPosition = Position;
+                _CurrentState = State.Jumping;
+                _StartingPosition = Position;
                 _Direction.Y = MOVE_UP;
                 _Speed = new Vector2(KNIGHT_SPEED, KNIGHT_SPEED);
             }
@@ -235,19 +236,19 @@ namespace DragonGame1
             //Check if knight is standing on ground or falling down.
             if (isPlayerStandingOnGround)
             {
-                if (mCurrentState == State.Jumping && _isOnWayDownInJump)
+                if (_CurrentState == State.Jumping && _isOnWayDownInJump)
                 {
                     _Speed.Y = 0;
                     _Direction.Y = 0;
                     _isOnWayDownInJump = false;
-                    mCurrentState = State.Walking;
+                    _CurrentState = State.Walking;
                 }
-                else if (mCurrentState != State.Jumping)
+                else if (_CurrentState != State.Jumping)
                 {
                     _Speed.Y = 0;
                 }
             }
-            else if (mCurrentState != State.Jumping)
+            else if (_CurrentState != State.Jumping)
             {
                 //Gravity.
                 _Speed.Y = KNIGHT_SPEED;
@@ -260,8 +261,6 @@ namespace DragonGame1
             Rectangle knightRectangle = new Rectangle((int)Position.X, (int)Position.Y, _knightFrameSizeWidth, _knightFrameSizeHeight);
             Rectangle fireballRecktangle = new Rectangle((int)fireball.Position.X, (int)fireball.Position.Y, fireball.GetWidth(), fireball.GetHeight());
             if (knightRectangle.Intersects(fireballRecktangle)) {
-                
-                Launch.Play();
 
                 if (_isHit == false)
                 {
@@ -273,6 +272,7 @@ namespace DragonGame1
                     {
                         this.Position.X += 15;
                     }
+                    Launch.Play();
                     fireball.Visible = false;
                     fireball.Position.X = 0;
                     fireball.Position.Y = 0;

@@ -19,10 +19,15 @@ namespace DragonGame1
     {
         Song lizzy_elisabethan_period_music_track;
         bool songstart = false;
+        bool mutesong = false;
+        int secondsBeforeSpeedUp = 30;
+        private float totalElapsed = 0;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Knight mKnightSprite;
         dragon mdragonSprite;
+        dragon mdragonSprite2;
+        dragon mdragonSprite3;
         List<Bushbackground> farBackgroundList;
         List<Bushbackground> nearBackgroundList;
         List<walkingground> walkinggroundList;
@@ -60,7 +65,9 @@ namespace DragonGame1
             walkwayList = new List<walkingground>();
             goldCoinList = new List<GoldCoin>();
             mKnightSprite = new Knight();
-            mdragonSprite = new dragon();
+            mdragonSprite = new dragon(35);
+            mdragonSprite2 = new dragon(15);
+            mdragonSprite3 = new dragon(25);
        
             base.Initialize();
         }
@@ -149,7 +156,11 @@ namespace DragonGame1
 
             mKnightSprite.LoadContent(this.Content);
             mdragonSprite.LoadContent(this.Content);
-
+            mdragonSprite.SetIsVisible(true);
+            mdragonSprite2.LoadContent(this.Content);
+            mdragonSprite2.SetIsVisible(true);
+            mdragonSprite3.LoadContent(this.Content);
+            mdragonSprite3.SetIsVisible(false);
         }
 
         /// <summary>
@@ -199,14 +210,55 @@ namespace DragonGame1
                 }
             }
 
+            //mute/unmute
+            if (CurrentKeyboardState.IsKeyDown(Keys.M))
+            {
+                if (mutesong)
+                {
+                    MediaPlayer.Resume();
+                    mutesong = false;
+                }
+                else {
+                    MediaPlayer.Pause();
+                    mutesong = true;
+                }
+            }
+
+            //Updates game objects
             if (CurrentGameState != GameStates.Paused)
             {
+                totalElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (totalElapsed > secondsBeforeSpeedUp) {
+
+                    if (mdragonSprite3.GetIsVisible() == false)
+                    {
+                        mdragonSprite3.SetIsVisible(true);
+                    }
+                    mdragonSprite.SpeedUpTheDragon();
+                    mdragonSprite2.SpeedUpTheDragon();
+                    totalElapsed = 0;
+                }
                 //update logic here
                 mKnightSprite.Update(gameTime);
                 mdragonSprite.Update(gameTime);
-
+                mdragonSprite2.Update(gameTime);
+                mdragonSprite3.Update(gameTime);
+                
                 List<FireBall> fireballs = mdragonSprite.GetFireballs();
                 foreach (FireBall fireball in fireballs)
+                {
+                    mKnightSprite.CollideWithFireBall(fireball);
+                }
+
+                List<FireBall> fireballs2 = mdragonSprite2.GetFireballs();
+                foreach (FireBall fireball in fireballs2)
+                {
+                    mKnightSprite.CollideWithFireBall(fireball);
+                }
+
+                List<FireBall> fireballs3 = mdragonSprite2.GetFireballs();
+                foreach (FireBall fireball in fireballs3)
                 {
                     mKnightSprite.CollideWithFireBall(fireball);
                 }
@@ -218,16 +270,25 @@ namespace DragonGame1
 
                 //Maks knight fall if knight is no longer on ground.
                 mKnightSprite.isPlayerStandingOnGround = false;
+                mdragonSprite.isPlayerStandingOnGround = false;
+                mdragonSprite2.isPlayerStandingOnGround = false;
+                mdragonSprite3.isPlayerStandingOnGround = false;
                 //Check if knight is on ground
                 foreach (walkingground ground in walkwayList)
                 {
                     mKnightSprite.CollideWithWalkingGround(ground, 64, 64);
+                    mdragonSprite.CollideWithWalkingGround(ground, 64, 64);
+                    mdragonSprite2.CollideWithWalkingGround(ground, 64, 64);
+                    mdragonSprite3.CollideWithWalkingGround(ground, 64, 64);
                 }
 
                 //Check if knight is on ground
                 foreach (walkingground ground in walkinggroundList)
                 {
                     mKnightSprite.CollideWithWalkingGround(ground, 128, 128);
+                    mdragonSprite.CollideWithWalkingGround(ground, 128, 128);
+                    mdragonSprite2.CollideWithWalkingGround(ground, 128, 128);
+                    mdragonSprite3.CollideWithWalkingGround(ground, 128, 128);
                 }
 
                 //Check if knight collects coin
@@ -280,6 +341,8 @@ namespace DragonGame1
 
             mKnightSprite.Draw(this.spriteBatch);
             mdragonSprite.Draw(this.spriteBatch);
+            mdragonSprite2.Draw(this.spriteBatch);
+            mdragonSprite3.Draw(this.spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);
