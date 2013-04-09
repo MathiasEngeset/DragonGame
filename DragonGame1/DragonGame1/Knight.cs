@@ -63,7 +63,7 @@ namespace DragonGame1
         //load methode
         public void LoadContent(ContentManager theContentManager)
         {
-            Launch = theContentManager.Load<SoundEffect>("explosion_6");
+            Launch = theContentManager.Load<SoundEffect>("loud_big_explosion");
             Position = new Vector2(START_POSITION_X, START_POSITION_Y);
             SpriteTexture = theContentManager.Load<Texture2D>(KNIGHT_ASSETNAME);
         }
