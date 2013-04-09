@@ -27,6 +27,13 @@ namespace DragonGame1
         List<walkingground> walkwayList;
         List<GoldCoin> goldCoinList;
 
+        enum GameStates{
+            Paused,
+            Playing
+        }
+        GameStates CurrentGameState = GameStates.Paused;
+
+
         public DragonGame1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -157,43 +164,62 @@ namespace DragonGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            KeyboardState CurrentKeyboardState = Keyboard.GetState();
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+           if((CurrentKeyboardState.IsKeyDown(Keys.Escape)))
+            this.Exit();
 
-            // TODO: Add your update logic here
-            mKnightSprite.Update(gameTime);
-            mdragonSprite.Update(gameTime);
-
-            List<FireBall> fireballs = mdragonSprite.GetFireballs();
-            foreach (FireBall fireball in fireballs) {
-                mKnightSprite.CollideWithFireBall(fireball);
-            }
-
-            foreach (GoldCoin goldcoin in goldCoinList){
-                goldcoin.Update(gameTime);
-            }
-
-            //Maks knight fall if knight is no longer on ground.
-            mKnightSprite.isPlayerStandingOnGround = false;
-            //Check if knight is on ground
-            foreach (walkingground ground in walkwayList) {
-                mKnightSprite.CollideWithWalkingGround(ground, 64, 64);
-            }
-
-            //Check if knight is on ground
-            foreach (walkingground ground in walkinggroundList)
+            if (CurrentGameState == GameStates.Playing)
             {
-                mKnightSprite.CollideWithWalkingGround(ground, 128, 128);
+                if (CurrentKeyboardState.IsKeyDown(Keys.P))
+                    CurrentGameState = GameStates.Paused;
             }
-
-            //Check if knight collects coin
-            foreach (GoldCoin coin in goldCoinList)
+            else if (CurrentGameState == GameStates.Paused)
             {
-                mKnightSprite.CollideWithGoldCoin(coin);
+                if (CurrentKeyboardState.IsKeyDown(Keys.P))
+                    CurrentGameState = GameStates.Playing;
             }
 
-            base.Update(gameTime);
+            if (CurrentGameState != GameStates.Paused)
+            {
+                //update logic here
+                mKnightSprite.Update(gameTime);
+                mdragonSprite.Update(gameTime);
+
+                List<FireBall> fireballs = mdragonSprite.GetFireballs();
+                foreach (FireBall fireball in fireballs)
+                {
+                    mKnightSprite.CollideWithFireBall(fireball);
+                }
+
+                foreach (GoldCoin goldcoin in goldCoinList)
+                {
+                    goldcoin.Update(gameTime);
+                }
+
+                //Maks knight fall if knight is no longer on ground.
+                mKnightSprite.isPlayerStandingOnGround = false;
+                //Check if knight is on ground
+                foreach (walkingground ground in walkwayList)
+                {
+                    mKnightSprite.CollideWithWalkingGround(ground, 64, 64);
+                }
+
+                //Check if knight is on ground
+                foreach (walkingground ground in walkinggroundList)
+                {
+                    mKnightSprite.CollideWithWalkingGround(ground, 128, 128);
+                }
+
+                //Check if knight collects coin
+                foreach (GoldCoin coin in goldCoinList)
+                {
+                    mKnightSprite.CollideWithGoldCoin(coin);
+                }
+
+                base.Update(gameTime);
+            }
+            
         }
 
         /// <summary>
@@ -207,13 +233,15 @@ namespace DragonGame1
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-            foreach (Bushbackground background in farBackgroundList) {
+            foreach (Bushbackground background in farBackgroundList)
+            {
                 background.Draw(spriteBatch);
             }
 
-            foreach (Bushbackground background in nearBackgroundList) {
+            foreach (Bushbackground background in nearBackgroundList)
+            {
                 background.Draw(spriteBatch);
-                
+
             }
 
             foreach (walkingground background in walkinggroundList)
@@ -221,11 +249,13 @@ namespace DragonGame1
                 background.Draw(spriteBatch);
             }
 
-            foreach (walkingground walkway in walkwayList) {
+            foreach (walkingground walkway in walkwayList)
+            {
                 walkway.Draw(spriteBatch);
             }
 
-            foreach (GoldCoin goldcoin in goldCoinList) {
+            foreach (GoldCoin goldcoin in goldCoinList)
+            {
                 goldcoin.Draw(spriteBatch);
             }
 
