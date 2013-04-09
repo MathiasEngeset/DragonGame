@@ -17,6 +17,8 @@ namespace DragonGame1
     /// </summary>
     public class DragonGame1 : Microsoft.Xna.Framework.Game
     {
+        Song lizzy_elisabethan_period_music_track;
+        bool songstart = false;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Knight mKnightSprite;
@@ -31,7 +33,7 @@ namespace DragonGame1
             Paused,
             Playing
         }
-        GameStates CurrentGameState = GameStates.Paused;
+        GameStates CurrentGameState = GameStates.Playing;
 
 
         public DragonGame1()
@@ -69,6 +71,8 @@ namespace DragonGame1
         /// </summary>
         protected override void LoadContent()
         {
+            lizzy_elisabethan_period_music_track = Content.Load<Song>("lizzy_elizabethan_period_music_track");
+            MediaPlayer.IsRepeating = true;
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -164,20 +168,35 @@ namespace DragonGame1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (!songstart)
+            {
+                MediaPlayer.Play(lizzy_elisabethan_period_music_track);
+                songstart = true;
+            }
             KeyboardState CurrentKeyboardState = Keyboard.GetState();
             // Allows the game to exit
-           if((CurrentKeyboardState.IsKeyDown(Keys.Escape)))
-            this.Exit();
-
+            if ((CurrentKeyboardState.IsKeyDown(Keys.Escape)))
+            {
+                MediaPlayer.Stop();
+                this.Exit();
+            }
+            
+            //Pause gameplay
             if (CurrentGameState == GameStates.Playing)
             {
                 if (CurrentKeyboardState.IsKeyDown(Keys.P))
+                {
+                    MediaPlayer.Pause();
                     CurrentGameState = GameStates.Paused;
+                }
             }
             else if (CurrentGameState == GameStates.Paused)
             {
                 if (CurrentKeyboardState.IsKeyDown(Keys.P))
+                {
+                    MediaPlayer.Resume();
                     CurrentGameState = GameStates.Playing;
+                }
             }
 
             if (CurrentGameState != GameStates.Paused)
