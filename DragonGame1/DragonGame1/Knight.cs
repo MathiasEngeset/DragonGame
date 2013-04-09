@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace DragonGame1
 {
     class Knight
     {
+        SoundEffect Explosion;
+        SoundEffect Launch;
+
         enum State
         {
             Walking,
@@ -57,6 +63,7 @@ namespace DragonGame1
         //load methode
         public void LoadContent(ContentManager theContentManager)
         {
+            Launch = theContentManager.Load<SoundEffect>("explosion_6");
             Position = new Vector2(START_POSITION_X, START_POSITION_Y);
             SpriteTexture = theContentManager.Load<Texture2D>(KNIGHT_ASSETNAME);
         }
@@ -253,6 +260,8 @@ namespace DragonGame1
             Rectangle knightRectangle = new Rectangle((int)Position.X, (int)Position.Y, _knightFrameSizeWidth, _knightFrameSizeHeight);
             Rectangle fireballRecktangle = new Rectangle((int)fireball.Position.X, (int)fireball.Position.Y, fireball.GetWidth(), fireball.GetHeight());
             if (knightRectangle.Intersects(fireballRecktangle)) {
+                
+                Launch.Play();
 
                 if (_isHit == false)
                 {
