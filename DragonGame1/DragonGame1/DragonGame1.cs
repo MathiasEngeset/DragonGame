@@ -17,6 +17,7 @@ namespace DragonGame1
     /// </summary>
     public class DragonGame1 : Microsoft.Xna.Framework.Game
     {
+        SpriteFont UVfont;
         Song lizzy_elisabethan_period_music_track;
         bool songstart = false;
         bool mutesong = false;
@@ -40,6 +41,7 @@ namespace DragonGame1
             Playing,
             MainMenu,
             Options,
+            GameOver
         }
         // GameStates CurrentGameState = GameStates.Playing;
         GameStates CurrentGameState = GameStates.MainMenu;
@@ -86,6 +88,7 @@ namespace DragonGame1
         /// </summary>
         protected override void LoadContent()
         {
+            UVfont = Content.Load<SpriteFont>("SpriteFont1");
             lizzy_elisabethan_period_music_track = Content.Load<Song>("lizzy_elizabethan_period_music_track");
             MediaPlayer.IsRepeating = true;
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -394,6 +397,10 @@ namespace DragonGame1
                 mdragonSprite.Draw(this.spriteBatch);
                 mdragonSprite2.Draw(this.spriteBatch);
                 mdragonSprite3.Draw(this.spriteBatch);
+                        break;
+
+                case(GameStates.GameOver):
+                        spriteBatch.DrawString(UVfont, "Game Over", new Vector2((graphics.GraphicsDevice.Viewport.Width - UVfont.MeasureString("Game Over").X) / 2, graphics.GraphicsDevice.Viewport.Height / 2), Color.White);
                         break;
 
             }
