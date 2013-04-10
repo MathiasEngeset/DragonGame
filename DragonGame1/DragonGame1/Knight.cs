@@ -36,6 +36,11 @@ namespace DragonGame1
         private Texture2D SpriteTexture;
         public Vector2 Position = new Vector2(0, 0);
         KeyboardState _PreviousKeyboardState;
+
+        //Health texture og posision
+        private Texture2D heartTexture;
+        public Rectangle heartPosition;
+        public int health = 3;
         
 
         private const int _knightFrameSizeWidth = 169;
@@ -66,6 +71,7 @@ namespace DragonGame1
             Launch = theContentManager.Load<SoundEffect>("explosion_2");
             Position = new Vector2(START_POSITION_X, START_POSITION_Y);
             SpriteTexture = theContentManager.Load<Texture2D>(KNIGHT_ASSETNAME);
+            heartTexture = theContentManager.Load<Texture2D>("heart");
         }
 
         public void Update(GameTime theGameTime)
@@ -227,6 +233,7 @@ namespace DragonGame1
             if (!_isHit) {
                 _hitStartTime = DateTime.Now;
                 _isHit = true;
+                health -= 1;
             }
 
         }
@@ -312,6 +319,16 @@ namespace DragonGame1
         //draw the sprite to the screen
         public void Draw(SpriteBatch theSpriteBatch)
         {
+            if (health > 0)
+            {
+                int hjerteSomTegnes = 0;
+                for (int i = 0; i < health; i++)
+                {
+                    heartPosition = new Rectangle(10 + hjerteSomTegnes, 10, 60, 50);
+                    theSpriteBatch.Draw(heartTexture, heartPosition, Color.White);
+                    hjerteSomTegnes += 60;
+                }
+            }
             theSpriteBatch.Draw(SpriteTexture, Position, new Rectangle(_knightCurrentFrameX, _knightCurrentFrameY, _knightFrameSizeWidth, _knightFrameSizeHeight), color);
         }
 
