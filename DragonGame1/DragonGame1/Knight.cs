@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace DragonGame1
 {
+    [Serializable]
     class Knight
     {
         SoundEffect Explotion;

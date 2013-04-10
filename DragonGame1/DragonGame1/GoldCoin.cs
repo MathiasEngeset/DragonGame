@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DragonGame1
 {
+    [Serializable]
     class GoldCoin
     {
         const string COIN_ASSETNAME = "gold coins";

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DragonGame1
 {
+    [Serializable]
     class dragon
     {
         enum State

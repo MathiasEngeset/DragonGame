@@ -19,6 +19,7 @@ namespace DragonGame1
     {
         SpriteFont UVfont;
         Song lizzy_elisabethan_period_music_track;
+        Song medievalmusic_irishwake;
         bool songstart = false;
         bool mutesong = false;
         int secondsBeforeSpeedUp = 30;
@@ -90,6 +91,7 @@ namespace DragonGame1
         {
             UVfont = Content.Load<SpriteFont>("SpriteFont1");
             lizzy_elisabethan_period_music_track = Content.Load<Song>("lizzy_elizabethan_period_music_track");
+            medievalmusic_irishwake = Content.Load<Song>("medieval music-irish wake");
             MediaPlayer.IsRepeating = true;
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
