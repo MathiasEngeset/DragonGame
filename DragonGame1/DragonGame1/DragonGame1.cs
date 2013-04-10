@@ -225,7 +225,7 @@ namespace DragonGame1
             }
 
             //Updates game objects
-            if (CurrentGameState != GameStates.Paused)
+            if (CurrentGameState == GameStates.Playing)
             {
                 totalElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
 

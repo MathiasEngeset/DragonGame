@@ -15,8 +15,9 @@ namespace DragonGame1
 {
     class Knight
     {
-        SoundEffect Explosion;
-        SoundEffect Launch;
+        SoundEffect Explotion;
+        SoundEffect CoinSound;
+        SoundEffect JumpSound;
 
         enum State
         {
@@ -68,7 +69,9 @@ namespace DragonGame1
         //load methode
         public void LoadContent(ContentManager theContentManager)
         {
-            Launch = theContentManager.Load<SoundEffect>("explosion_2");
+            Explotion = theContentManager.Load<SoundEffect>("explosion_2");
+            CoinSound = theContentManager.Load<SoundEffect>("Coin_Sound_Effect");
+            JumpSound = theContentManager.Load<SoundEffect>("Jump");
             Position = new Vector2(START_POSITION_X, START_POSITION_Y);
             SpriteTexture = theContentManager.Load<Texture2D>(KNIGHT_ASSETNAME);
             heartTexture = theContentManager.Load<Texture2D>("heart");
@@ -221,6 +224,7 @@ namespace DragonGame1
         {
             if (_CurrentState != State.Jumping && isPlayerStandingOnGround)
             {
+                JumpSound.Play();
                 _CurrentState = State.Jumping;
                 _StartingPosition = Position;
                 _Direction.Y = MOVE_UP;
@@ -279,7 +283,7 @@ namespace DragonGame1
                     {
                         this.Position.X += 15;
                     }
-                    Launch.Play();
+                    Explotion.Play();
                     fireball.Visible = false;
                     fireball.Position.X = 0;
                     fireball.Position.Y = 0;
@@ -312,6 +316,7 @@ namespace DragonGame1
             if (knightRectangle.Intersects(coinRecktangle))
             {
                 coin.GenerateNewPosition();
+                CoinSound.Play();
                 //Todo: get point for getting coin
             }
         }
