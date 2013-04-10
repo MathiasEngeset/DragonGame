@@ -34,19 +34,27 @@ namespace DragonGame1
         List<walkingground> walkwayList;
         List<GoldCoin> goldCoinList;
 
-        enum GameStates{
+        enum GameStates
+        {
             Paused,
-            Playing
+            Playing,
+            MainMenu,
+            Options,
         }
-        GameStates CurrentGameState = GameStates.Playing;
+        // GameStates CurrentGameState = GameStates.Playing;
+        GameStates CurrentGameState = GameStates.MainMenu;
 
+        cButton btnPlay;
+
+
+        int screenWidth = 1024, screenHeight = 768;
 
         public DragonGame1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferHeight = 768;
-            graphics.PreferredBackBufferWidth = 1024;
+       //     graphics.PreferredBackBufferHeight = 768;
+       //     graphics.PreferredBackBufferWidth = 1024;
         }
 
         /// <summary>
@@ -161,6 +169,20 @@ namespace DragonGame1
             mdragonSprite2.SetIsVisible(true);
             mdragonSprite3.LoadContent(this.Content);
             mdragonSprite3.SetIsVisible(false);
+
+            // Menu button
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
+
+            graphics.ApplyChanges();
+
+            IsMouseVisible = true;
+
+            btnPlay = new cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
+            btnPlay.setPosition(new Vector2(400, 500)); 
         }
 
         /// <summary>
@@ -191,7 +213,7 @@ namespace DragonGame1
                 MediaPlayer.Stop();
                 this.Exit();
             }
-            
+
             //Pause gameplay
             if (CurrentGameState == GameStates.Playing)
             {
@@ -218,7 +240,8 @@ namespace DragonGame1
                     MediaPlayer.Resume();
                     mutesong = false;
                 }
-                else {
+                else
+                {
                     MediaPlayer.Pause();
                     mutesong = true;
                 }
@@ -229,7 +252,8 @@ namespace DragonGame1
             {
                 totalElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                if (totalElapsed > secondsBeforeSpeedUp) {
+                if (totalElapsed > secondsBeforeSpeedUp)
+                {
 
                     if (mdragonSprite3.GetIsVisible() == false)
                     {
@@ -244,7 +268,7 @@ namespace DragonGame1
                 mdragonSprite.Update(gameTime);
                 mdragonSprite2.Update(gameTime);
                 mdragonSprite3.Update(gameTime);
-                
+
                 List<FireBall> fireballs = mdragonSprite.GetFireballs();
                 foreach (FireBall fireball in fireballs)
                 {
@@ -297,11 +321,30 @@ namespace DragonGame1
                     mKnightSprite.CollideWithGoldCoin(coin);
                 }
 
+            }
+                // Menu
+
+                MouseState mouse = Mouse.GetState();
+
+                switch (CurrentGameState)
+                {
+                    case GameStates.MainMenu:
+                        if (btnPlay.isClicked == true) CurrentGameState = GameStates.Playing;
+                        btnPlay.Update(mouse);
+                        break;
+                    case GameStates.Playing:
+
+                        break;
+
+               
+
+                }
+
+
                 base.Update(gameTime);
             }
-            
-        }
 
+        
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -312,38 +355,48 @@ namespace DragonGame1
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-
-            foreach (Bushbackground background in farBackgroundList)
+ switch (CurrentGameState)
             {
-                background.Draw(spriteBatch);
+                case GameStates.MainMenu:
+                    spriteBatch.Draw(Content.Load<Texture2D>("MainBG"), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+                    btnPlay.Draw(spriteBatch);
+                    break;
+                case GameStates.Playing:
+                    // Gameplay
+                    
+                foreach (Bushbackground background in farBackgroundList)
+                {
+                    background.Draw(spriteBatch);
+                }
+
+                foreach (Bushbackground background in nearBackgroundList)
+                {
+                    background.Draw(spriteBatch);
+
+                }
+
+                foreach (walkingground background in walkinggroundList)
+                {
+                    background.Draw(spriteBatch);
+                }
+
+                foreach (walkingground walkway in walkwayList)
+                {
+                    walkway.Draw(spriteBatch);
+                }
+
+                foreach (GoldCoin goldcoin in goldCoinList)
+                {
+                    goldcoin.Draw(spriteBatch);
+                }
+
+                mKnightSprite.Draw(this.spriteBatch);
+                mdragonSprite.Draw(this.spriteBatch);
+                mdragonSprite2.Draw(this.spriteBatch);
+                mdragonSprite3.Draw(this.spriteBatch);
+                        break;
+
             }
-
-            foreach (Bushbackground background in nearBackgroundList)
-            {
-                background.Draw(spriteBatch);
-
-            }
-
-            foreach (walkingground background in walkinggroundList)
-            {
-                background.Draw(spriteBatch);
-            }
-
-            foreach (walkingground walkway in walkwayList)
-            {
-                walkway.Draw(spriteBatch);
-            }
-
-            foreach (GoldCoin goldcoin in goldCoinList)
-            {
-                goldcoin.Draw(spriteBatch);
-            }
-
-            mKnightSprite.Draw(this.spriteBatch);
-            mdragonSprite.Draw(this.spriteBatch);
-            mdragonSprite2.Draw(this.spriteBatch);
-            mdragonSprite3.Draw(this.spriteBatch);
-
             spriteBatch.End();
             base.Draw(gameTime);
         }
