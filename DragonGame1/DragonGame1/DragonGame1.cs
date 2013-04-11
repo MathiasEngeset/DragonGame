@@ -211,9 +211,9 @@ namespace DragonGame1
             btnControls = new cButton(Content.Load<Texture2D>("ControlsButton"), graphics.GraphicsDevice);
             btnQuit = new cButton(Content.Load<Texture2D>("QuitButton"), graphics.GraphicsDevice);
 
-            btnPlay.setPosition(new Vector2(400, 450));
-            btnControls.setPosition(new Vector2(400, 500));
-            btnQuit.setPosition(new Vector2(400, 550));
+            btnPlay.setPosition(new Vector2(450, 450));
+            btnControls.setPosition(new Vector2(450, 500));
+            btnQuit.setPosition(new Vector2(450, 550));
          
             // Options
             btnPrevious = new cButton(Content.Load<Texture2D>("BackButton"), graphics.GraphicsDevice);

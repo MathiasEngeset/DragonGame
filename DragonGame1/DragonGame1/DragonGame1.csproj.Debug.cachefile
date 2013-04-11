@@ -50,6 +50,8 @@ Content\RestartButton.xnb
 Content\ResumeButton.xnb
 Content\UnmuteButton.xnb
 Content\ControlsButton.xnb
+Content\KnightAndDragon.xnb
+Content\heart_full.xnb
 Content\loud_big_explosion.xnb
 Content\explosion_2.xnb
 Content\Coin_Sound_Effect.xnb
@@ -58,7 +60,5 @@ Content\lizzy_elizabethan_period_music_track.xnb
 Content\bakgrunnsmusikk_2.xnb
 Content\GameOverJingJing.xnb
 Content\timerFont.xnb
-Content\KnightAndDragon.xnb
-Content\heart_full.xnb
 Content\lizzy_elizabethan_period_music_track.wma
 Content\bakgrunnsmusikk_2.wma
