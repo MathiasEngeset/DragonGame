@@ -330,15 +330,13 @@ namespace DragonGame1
 
                         Cargo cargoToSave = new Cargo()
                         {
-                            //farBackgroundList = this.farBackgroundList,
                             goldCoinList = this.goldCoinList,
                             mdragonSprite = this.mdragonSprite,
                             mdragonSprite2 = this.mdragonSprite2,
                             mdragonSprite3 = this.mdragonSprite3,
-                            mKnightSprite = this.mKnightSprite
-                            //nearBackgroundList = this.nearBackgroundList,
-                            //walkinggroundList = this.walkinggroundList,
-                            //walkwayList = this.walkwayList};
+                            mKnightSprite = this.mKnightSprite,
+                            mKnightSprite2 = this.mKnightSprite2,
+                            countdownStartime = this.countdownStartime
                         };
                         
                         BinaryFormatter bin = new BinaryFormatter();
@@ -362,6 +360,9 @@ namespace DragonGame1
                         mKnightSprite = loadCargo.mKnightSprite;
                         var loadedKnightPos = loadCargo.mKnightSprite.Position;
                         var loadedKnightHealth = loadCargo.mKnightSprite.health;
+                        mKnightSprite2 = loadCargo.mKnightSprite2;
+                        var loadedKnight2Pos = loadCargo.mKnightSprite2.Position;
+                        var loadedKnight2Health = loadCargo.mKnightSprite2.health;
                         mdragonSprite = loadCargo.mdragonSprite;
                         var savedDragonSpritePos = loadCargo.mdragonSprite.Position;
                         mdragonSprite2 = loadCargo.mdragonSprite2;
@@ -370,11 +371,16 @@ namespace DragonGame1
                         var savedDragonSpritePos3 = loadCargo.mdragonSprite3.Position;
                         var savedDragonSpriteVisible = loadCargo.mdragonSprite3.GetIsVisible();
                         goldCoinList = loadCargo.goldCoinList;
+                        countdownStartime = loadCargo.countdownStartime;
 
                         //Loads texture, sound effects etc.
                         mKnightSprite.LoadContent(this.Content);
                         mKnightSprite.Position = loadedKnightPos;
                         mKnightSprite.health = loadedKnightHealth;
+
+                        mKnightSprite2.LoadContent(this.Content);
+                        mKnightSprite2.Position = loadedKnight2Pos;
+                        mKnightSprite2.health = loadedKnight2Health;
 
                         mdragonSprite.LoadContent(this.Content);
                         mdragonSprite.Position = savedDragonSpritePos;

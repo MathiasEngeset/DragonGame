@@ -120,7 +120,7 @@ namespace DragonGame1
                 }
             }
             else {
-                if (aCurrentKeyboardState.IsKeyDown(Keys.S) == true && _PreviousKeyboardState.IsKeyDown(Keys.S) == false)
+                if (aCurrentKeyboardState.IsKeyDown(Keys.W) == true && _PreviousKeyboardState.IsKeyDown(Keys.W) == false)
                 {
                     Jump();
                 }
@@ -227,7 +227,7 @@ namespace DragonGame1
                 else
                 {
                     //if player 2
-                    if (aCurrentKeyboardState.IsKeyDown(Keys.Z) == true)
+                    if (aCurrentKeyboardState.IsKeyDown(Keys.A) == true)
                     {
                         if (Position.X < 0)
                         {
@@ -254,7 +254,7 @@ namespace DragonGame1
                         _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
                     }
 
-                    else if (aCurrentKeyboardState.IsKeyDown(Keys.X) == true)
+                    else if (aCurrentKeyboardState.IsKeyDown(Keys.D) == true)
                     {
                         if (Position.X > (1024 - _knightFrameSizeWidth))
                         {
