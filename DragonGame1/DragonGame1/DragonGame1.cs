@@ -51,6 +51,9 @@ namespace DragonGame1
         GameStates CurrentGameState = GameStates.MainMenu;
 
         cButton btnPlay;
+        cButton btnControls;
+        cButton btnQuit;
+        cButton btnPrevious;
 
 
         int screenWidth = 1024, screenHeight = 768;
@@ -181,8 +184,8 @@ namespace DragonGame1
             mdragonSprite3.LoadContent(this.Content);
             mdragonSprite3.SetIsVisible(false);
 
-            // Menu button
-
+           
+            // Resolution Settings
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             graphics.PreferredBackBufferWidth = screenWidth;
@@ -190,10 +193,22 @@ namespace DragonGame1
 
             graphics.ApplyChanges();
 
+            // Menu button
             IsMouseVisible = true;
 
+            // Main menu
             btnPlay = new cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
-            btnPlay.setPosition(new Vector2(400, 500)); 
+            btnControls = new cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
+            btnQuit = new cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
+
+            btnPlay.setPosition(new Vector2(400, 500));
+            btnControls.setPosition(new Vector2(400, 400));
+            btnQuit.setPosition(new Vector2(400, 600));
+         
+            // Options
+            btnPrevious = new cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
+            btnPrevious.setPosition(new Vector2(400, 700));
+            
         }
 
         /// <summary>
@@ -435,13 +450,19 @@ namespace DragonGame1
                 {
                     case GameStates.MainMenu:
                         if (btnPlay.isClicked == true) CurrentGameState = GameStates.Playing;
+                        if (btnControls.isClicked == true) CurrentGameState = GameStates.Options;
+                        if (btnQuit.isClicked == true) this.Exit();
                         btnPlay.Update(mouse);
+                        btnControls.Update(mouse);
+                        btnQuit.Update(mouse);
                         break;
                     case GameStates.Playing:
 
                         break;
-
-               
+                    case GameStates.Options:
+                        if (btnPrevious.isClicked == true) CurrentGameState = GameStates.MainMenu;
+                        btnPrevious.Update(mouse);
+                        break;
 
                 }
 
@@ -460,11 +481,22 @@ namespace DragonGame1
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
- switch (CurrentGameState)
+            switch (CurrentGameState)
             {
                 case GameStates.MainMenu:
                     spriteBatch.Draw(Content.Load<Texture2D>("MainBG"), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
                     btnPlay.Draw(spriteBatch);
+                    btnControls.Draw(spriteBatch);
+                    btnQuit.Draw(spriteBatch);
+
+                    break;
+
+
+                case (GameStates.Options):
+
+                    // Draw control options.
+
+                    btnPrevious.Draw(spriteBatch);
                     break;
                 case GameStates.Playing:
                     // Gameplay
@@ -504,6 +536,8 @@ namespace DragonGame1
                 case(GameStates.GameOver):
                         spriteBatch.DrawString(UVfont, "Game Over", new Vector2((graphics.GraphicsDevice.Viewport.Width - UVfont.MeasureString("Game Over").X) / 2, graphics.GraphicsDevice.Viewport.Height / 2), Color.White);
                         break;
+
+   
 
             }
             spriteBatch.End();

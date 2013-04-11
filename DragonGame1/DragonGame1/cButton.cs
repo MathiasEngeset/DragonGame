@@ -63,6 +63,7 @@ namespace DragonGame1
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, rectangle, colour);
+
         }
     }
 }
