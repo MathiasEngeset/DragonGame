@@ -207,7 +207,7 @@ namespace DragonGame1
          
             // Options
             btnPrevious = new cButton(Content.Load<Texture2D>("BackButton"), graphics.GraphicsDevice);
-            btnPrevious.setPosition(new Vector2(400, 600));
+            btnPrevious.setPosition(new Vector2(400, 700));
             
         }
 
