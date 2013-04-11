@@ -50,6 +50,9 @@ namespace DragonGame1
         public Rectangle heartPosition;
         public int health = 3;
         
+        //Status and id.
+        private bool isActive = false;
+        private int id = 1;
 
         private const int _knightFrameSizeWidth = 169;
         private const int _knightFrameSizeHeight = 144;
@@ -109,9 +112,18 @@ namespace DragonGame1
             if (_CurrentState == State.Walking) { 
             }
 
-            if (aCurrentKeyboardState.IsKeyDown(Keys.Space) == true && _PreviousKeyboardState.IsKeyDown(Keys.Space) == false)
+            if (this.id == 1)
             {
-                Jump();
+                if (aCurrentKeyboardState.IsKeyDown(Keys.Space) == true && _PreviousKeyboardState.IsKeyDown(Keys.Space) == false)
+                {
+                    Jump();
+                }
+            }
+            else {
+                if (aCurrentKeyboardState.IsKeyDown(Keys.S) == true && _PreviousKeyboardState.IsKeyDown(Keys.S) == false)
+                {
+                    Jump();
+                }
             }
 
             if (_CurrentState == State.Jumping)
@@ -154,58 +166,121 @@ namespace DragonGame1
                 _Speed = Vector2.Zero;
                 _Direction = Vector2.Zero;
 
-                if (aCurrentKeyboardState.IsKeyDown(Keys.Left) == true)
+                //if player 1
+                if (this.id == 1)
                 {
-                    if (Position.X < 0)
+                    if (aCurrentKeyboardState.IsKeyDown(Keys.Left) == true)
                     {
-                        _Speed.X = 0;
-                        _Direction.X = 0;
-                    }
-                    else
-                    {
-                        _Speed.X = KNIGHT_SPEED;
-                        _Direction.X = MOVE_LEFT;
-                    }
-                    if (_totalElapsed > _timePerFrame)
-                    {
-                        if (frameCounter >= 2)
+                        if (Position.X < 0)
                         {
-                            frameCounter = 0;
+                            _Speed.X = 0;
+                            _Direction.X = 0;
                         }
                         else
                         {
-                            frameCounter++;
+                            _Speed.X = KNIGHT_SPEED;
+                            _Direction.X = MOVE_LEFT;
                         }
-                        _totalElapsed -= _timePerFrame;
+                        if (_totalElapsed > _timePerFrame)
+                        {
+                            if (frameCounter >= 2)
+                            {
+                                frameCounter = 0;
+                            }
+                            else
+                            {
+                                frameCounter++;
+                            }
+                            _totalElapsed -= _timePerFrame;
+                        }
+                        _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
                     }
-                    _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
-                }
 
-                else if (aCurrentKeyboardState.IsKeyDown(Keys.Right) == true)
-                {
-                    if (Position.X > (1024 - _knightFrameSizeWidth))
+                    else if (aCurrentKeyboardState.IsKeyDown(Keys.Right) == true)
                     {
-                        _Speed.X = 0;
-                        _Direction.X = 0;
-                    }
-                    else {
-                        _Speed.X = KNIGHT_SPEED;
-                        _Direction.X = MOVE_RIGHT;
-                    }
-                    
-                    if (_totalElapsed > _timePerFrame)
-                    {
-                        if (frameCounter <= 3)
+                        if (Position.X > (1024 - _knightFrameSizeWidth))
                         {
-                            frameCounter = 5;
+                            _Speed.X = 0;
+                            _Direction.X = 0;
                         }
                         else
                         {
-                            frameCounter--;
+                            _Speed.X = KNIGHT_SPEED;
+                            _Direction.X = MOVE_RIGHT;
                         }
-                        _totalElapsed -= _timePerFrame;
+
+                        if (_totalElapsed > _timePerFrame)
+                        {
+                            if (frameCounter <= 3)
+                            {
+                                frameCounter = 5;
+                            }
+                            else
+                            {
+                                frameCounter--;
+                            }
+                            _totalElapsed -= _timePerFrame;
+                        }
+                        _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
                     }
-                    _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
+                }
+                else
+                {
+                    //if player 2
+                    if (aCurrentKeyboardState.IsKeyDown(Keys.Z) == true)
+                    {
+                        if (Position.X < 0)
+                        {
+                            _Speed.X = 0;
+                            _Direction.X = 0;
+                        }
+                        else
+                        {
+                            _Speed.X = KNIGHT_SPEED;
+                            _Direction.X = MOVE_LEFT;
+                        }
+                        if (_totalElapsed > _timePerFrame)
+                        {
+                            if (frameCounter >= 2)
+                            {
+                                frameCounter = 0;
+                            }
+                            else
+                            {
+                                frameCounter++;
+                            }
+                            _totalElapsed -= _timePerFrame;
+                        }
+                        _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
+                    }
+
+                    else if (aCurrentKeyboardState.IsKeyDown(Keys.X) == true)
+                    {
+                        if (Position.X > (1024 - _knightFrameSizeWidth))
+                        {
+                            _Speed.X = 0;
+                            _Direction.X = 0;
+                        }
+                        else
+                        {
+                            _Speed.X = KNIGHT_SPEED;
+                            _Direction.X = MOVE_RIGHT;
+                        }
+
+                        if (_totalElapsed > _timePerFrame)
+                        {
+                            if (frameCounter <= 3)
+                            {
+                                frameCounter = 5;
+                            }
+                            else
+                            {
+                                frameCounter--;
+                            }
+                            _totalElapsed -= _timePerFrame;
+                        }
+                        _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
+                    }
                 }
             }
         }
@@ -336,13 +411,47 @@ namespace DragonGame1
                 int hjerteSomTegnes = 0;
                 for (int i = 0; i < health; i++)
                 {
-                    heartPosition = new Rectangle(10 + hjerteSomTegnes, 10, 60, 50);
-                    theSpriteBatch.Draw(heartTexture, heartPosition, Color.White);
-                    hjerteSomTegnes += 60;
+                    if (this.id == 1) //Player 1
+                    {
+                        heartPosition = new Rectangle(10 + hjerteSomTegnes, 10, 60, 50);
+                        theSpriteBatch.Draw(heartTexture, heartPosition, Color.White);
+                        hjerteSomTegnes += 60;
+                    }
+                    else { //Player 2
+                        if (this.isActive)
+                        {
+                            heartPosition = new Rectangle(960 - hjerteSomTegnes, 10, 60, 50);
+                            theSpriteBatch.Draw(heartTexture, heartPosition, Color.White);
+                            hjerteSomTegnes += 60;
+                        }
+                    }
+                    
                 }
             }
             theSpriteBatch.Draw(SpriteTexture, Position, new Rectangle(_knightCurrentFrameX, _knightCurrentFrameY, _knightFrameSizeWidth, _knightFrameSizeHeight), color);
         }
+
+        //***********************
+        //getter/setter
+        //***********************
+
+        public void SetIsActive(bool active) {
+            this.isActive = active;
+        }
+
+        public bool GetIsActive() {
+            return this.isActive;
+        }
+
+        public void SetId(int id) {
+            this.id = id;
+        }
+
+        public int GetId() {
+            return this.id;
+        }
+
+
 
     }//END CLASS
 }

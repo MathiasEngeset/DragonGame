@@ -34,6 +34,7 @@ namespace DragonGame1
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Knight mKnightSprite;
+        Knight mKnightSprite2;
         dragon mdragonSprite;
         dragon mdragonSprite2;
         dragon mdragonSprite3;
@@ -86,6 +87,11 @@ namespace DragonGame1
             walkwayList = new List<walkingground>();
             goldCoinList = new List<GoldCoin>();
             mKnightSprite = new Knight();
+            mKnightSprite.SetId(1);
+            mKnightSprite.SetIsActive(true);
+            mKnightSprite2 = new Knight();
+            mKnightSprite2.SetId(2);
+            mKnightSprite2.SetIsActive(false);
             mdragonSprite = new dragon(35);
             mdragonSprite2 = new dragon(15);
             mdragonSprite3 = new dragon(25);
@@ -180,6 +186,7 @@ namespace DragonGame1
             goldCoinList.Add(new GoldCoin(this.Content, 400, 100));
 
             mKnightSprite.LoadContent(this.Content);
+            mKnightSprite2.LoadContent(this.Content);
             mdragonSprite.LoadContent(this.Content);
             mdragonSprite.SetIsVisible(true);
             mdragonSprite2.LoadContent(this.Content);
@@ -256,6 +263,15 @@ namespace DragonGame1
             {
                 MediaPlayer.Stop();
                 this.Exit();
+            }
+
+            //Start player 2
+            if (CurrentGameState == GameStates.Playing)
+            {
+                if (CurrentKeyboardState.IsKeyDown(Keys.F9))
+                {
+                    mKnightSprite2.SetIsActive(true);
+                }
             }
 
             //Pause gameplay
@@ -410,6 +426,9 @@ namespace DragonGame1
                     totalElapsed = 0;
                 }
                 //update logic here
+                if(mKnightSprite2.GetIsActive()){
+                mKnightSprite2.Update(gameTime);
+                }
                 mKnightSprite.Update(gameTime);
                 mdragonSprite.Update(gameTime);
                 mdragonSprite2.Update(gameTime);
@@ -419,18 +438,30 @@ namespace DragonGame1
                 foreach (FireBall fireball in fireballs)
                 {
                     mKnightSprite.CollideWithFireBall(fireball);
+                    if (mKnightSprite2.GetIsActive())
+                    {
+                        mKnightSprite2.CollideWithFireBall(fireball);
+                    }
                 }
 
                 List<FireBall> fireballs2 = mdragonSprite2.GetFireballs();
                 foreach (FireBall fireball in fireballs2)
                 {
                     mKnightSprite.CollideWithFireBall(fireball);
+                    if (mKnightSprite2.GetIsActive())
+                    {
+                        mKnightSprite2.CollideWithFireBall(fireball);
+                    }
                 }
 
                 List<FireBall> fireballs3 = mdragonSprite2.GetFireballs();
                 foreach (FireBall fireball in fireballs3)
                 {
                     mKnightSprite.CollideWithFireBall(fireball);
+                    if (mKnightSprite2.GetIsActive())
+                    {
+                        mKnightSprite2.CollideWithFireBall(fireball);
+                    }
                 }
 
                 foreach (GoldCoin goldcoin in goldCoinList)
@@ -440,6 +471,7 @@ namespace DragonGame1
 
                 //Maks knight fall if knight is no longer on ground.
                 mKnightSprite.isPlayerStandingOnGround = false;
+                mKnightSprite2.isPlayerStandingOnGround = false;
                 mdragonSprite.isPlayerStandingOnGround = false;
                 mdragonSprite2.isPlayerStandingOnGround = false;
                 mdragonSprite3.isPlayerStandingOnGround = false;
@@ -447,6 +479,7 @@ namespace DragonGame1
                 foreach (walkingground ground in walkwayList)
                 {
                     mKnightSprite.CollideWithWalkingGround(ground, 64, 64);
+                    mKnightSprite2.CollideWithWalkingGround(ground, 64, 64);
                     mdragonSprite.CollideWithWalkingGround(ground, 64, 64);
                     mdragonSprite2.CollideWithWalkingGround(ground, 64, 64);
                     mdragonSprite3.CollideWithWalkingGround(ground, 64, 64);
@@ -456,6 +489,7 @@ namespace DragonGame1
                 foreach (walkingground ground in walkinggroundList)
                 {
                     mKnightSprite.CollideWithWalkingGround(ground, 128, 128);
+                    mKnightSprite2.CollideWithWalkingGround(ground, 128, 128);
                     mdragonSprite.CollideWithWalkingGround(ground, 128, 128);
                     mdragonSprite2.CollideWithWalkingGround(ground, 128, 128);
                     mdragonSprite3.CollideWithWalkingGround(ground, 128, 128);
@@ -465,6 +499,10 @@ namespace DragonGame1
                 foreach (GoldCoin coin in goldCoinList)
                 {
                     mKnightSprite.CollideWithGoldCoin(coin);
+                    if (mKnightSprite2.GetIsActive())
+                    {
+                        mKnightSprite2.CollideWithGoldCoin(coin);
+                    }
                 }
 
                 
@@ -552,6 +590,15 @@ namespace DragonGame1
                 foreach (GoldCoin goldcoin in goldCoinList)
                 {
                     goldcoin.Draw(spriteBatch);
+                }
+
+                if (mKnightSprite2.GetIsActive())
+                {
+                    mKnightSprite2.Draw(this.spriteBatch);
+                }
+                else {
+                    var start2playerText = "Hit F9 for player 2";
+                    spriteBatch.DrawString(countdownFont, start2playerText, new Vector2((graphics.GraphicsDevice.Viewport.Width - countdownFont.MeasureString(start2playerText).X), graphics.GraphicsDevice.Viewport.Height - countdownFont.MeasureString(start2playerText).Y), Color.White);
                 }
 
                 mKnightSprite.Draw(this.spriteBatch);
