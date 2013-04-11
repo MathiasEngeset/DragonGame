@@ -97,8 +97,8 @@ namespace DragonGame1
         {
             MediaLibrary ml = new MediaLibrary();
             SongCollection sc = ml.Songs;
-            
-        //  UVfont = Content.Load<SpriteFont>("SpriteFont1");
+
+            UVfont = Content.Load<SpriteFont>("GameOverJingJing");
             lizzy_elisabethan_period_music_track = Content.Load<Song>("lizzy_elizabethan_period_music_track");
             bakgrunnsmusikk_2 = Content.Load<Song>("Bakgrunnsmusikk_2");
             MediaPlayer.IsRepeating = true;
@@ -237,12 +237,12 @@ namespace DragonGame1
 
             KeyboardState CurrentKeyboardState = Keyboard.GetState();
 
-            if (CurrentKeyboardState.IsKeyDown(Keys.F1))
+            if (CurrentKeyboardState.IsKeyDown(Keys.F1) && songstart)
             {
                 MediaPlayer.Play(lizzy_elisabethan_period_music_track);
             }
 
-            if (CurrentKeyboardState.IsKeyDown(Keys.F2))
+            if (CurrentKeyboardState.IsKeyDown(Keys.F2) && songstart)
             {
                 MediaPlayer.Play(bakgrunnsmusikk_2);
             }
@@ -274,7 +274,7 @@ namespace DragonGame1
             }
 
             //mute/unmute
-            if (CurrentKeyboardState.IsKeyDown(Keys.M))
+            if (CurrentKeyboardState.IsKeyDown(Keys.F10))
             {
                 if (mutesong)
                 {
@@ -286,6 +286,18 @@ namespace DragonGame1
                     MediaPlayer.Pause();
                     mutesong = true;
                 }
+            }
+
+            //Volume down
+            if (CurrentKeyboardState.IsKeyDown(Keys.F11))
+            {
+                MediaPlayer.Volume -= 0.1f;
+            }
+
+            //Volume up
+            if (CurrentKeyboardState.IsKeyDown(Keys.F12))
+            {
+                MediaPlayer.Volume += 0.1f;
             }
 
             //***************************
