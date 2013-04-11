@@ -22,7 +22,7 @@ namespace DragonGame1
     {
         SpriteFont UVfont;
         Song lizzy_elisabethan_period_music_track;
-        Song medievalmusic_irishwake;
+        Song bakgrunnsmusikk_2;
         bool songstart = false;
         bool mutesong = false;
         int secondsBeforeSpeedUp = 30;
@@ -92,9 +92,12 @@ namespace DragonGame1
         /// </summary>
         protected override void LoadContent()
         {
+            MediaLibrary ml = new MediaLibrary();
+            SongCollection sc = ml.Songs;
+            
             UVfont = Content.Load<SpriteFont>("SpriteFont1");
             lizzy_elisabethan_period_music_track = Content.Load<Song>("lizzy_elizabethan_period_music_track");
-            //medievalmusic_irishwake = Content.Load<Song>("medieval music-irish wake");
+            bakgrunnsmusikk_2 = Content.Load<Song>("Bakgrunnsmusikk_2");
             MediaPlayer.IsRepeating = true;
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -213,8 +216,23 @@ namespace DragonGame1
             {
                 MediaPlayer.Play(lizzy_elisabethan_period_music_track);
                 songstart = true;
+                MediaPlayer.Play(bakgrunnsmusikk_2);
             }
+
+
             KeyboardState CurrentKeyboardState = Keyboard.GetState();
+
+            if (CurrentKeyboardState.IsKeyDown(Keys.NumPad1))
+            {
+                MediaPlayer.Play(lizzy_elisabethan_period_music_track);
+            }
+
+            if (CurrentKeyboardState.IsKeyDown(Keys.NumPad2))
+            {
+                MediaPlayer.Play(bakgrunnsmusikk_2);
+            }
+
+
             // Allows the game to exit
             if ((CurrentKeyboardState.IsKeyDown(Keys.Escape)))
             {
@@ -491,5 +509,6 @@ namespace DragonGame1
             spriteBatch.End();
             base.Draw(gameTime);
         }
+
     }
 }
