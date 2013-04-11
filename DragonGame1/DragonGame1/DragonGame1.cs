@@ -95,7 +95,7 @@ namespace DragonGame1
             MediaLibrary ml = new MediaLibrary();
             SongCollection sc = ml.Songs;
             
-            UVfont = Content.Load<SpriteFont>("SpriteFont1");
+        //  UVfont = Content.Load<SpriteFont>("SpriteFont1");
             lizzy_elisabethan_period_music_track = Content.Load<Song>("lizzy_elizabethan_period_music_track");
             bakgrunnsmusikk_2 = Content.Load<Song>("Bakgrunnsmusikk_2");
             MediaPlayer.IsRepeating = true;

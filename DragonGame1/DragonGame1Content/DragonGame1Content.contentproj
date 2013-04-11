@@ -309,13 +309,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SpriteFont1.spritefont">
-      <Name>SpriteFont1</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="bakgrunnsmusikk_2.wma">
       <Name>bakgrunnsmusikk_2</Name>
       <Importer>WmaImporter</Importer>
