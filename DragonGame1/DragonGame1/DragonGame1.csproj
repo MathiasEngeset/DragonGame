@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bushbackground.cs" />
+    <Compile Include="Cargo.cs" />
     <Compile Include="cButton.cs" />
     <Compile Include="dragon.cs" />
     <Compile Include="FireBall.cs" />

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DragonGame1
 {
+    [Serializable]
     public class FireBall
     {
         const string FIREBALL_ASSETNAME = "fireballs";
@@ -17,6 +18,7 @@ namespace DragonGame1
         Vector2 _Speed;
         Vector2 _Direction;
         public Vector2 Position = new Vector2(0, 0);
+        [field:NonSerialized]
         private Texture2D SpriteTexture;
 
         public const int _frameSizeWidth = 85;

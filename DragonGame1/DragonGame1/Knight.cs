@@ -14,10 +14,13 @@ using Microsoft.Xna.Framework.Media;
 namespace DragonGame1
 {
     [Serializable]
-    class Knight
+    public class Knight
     {
+        [field:NonSerialized]
         SoundEffect Explotion;
+        [field:NonSerialized]
         SoundEffect CoinSound;
+        [field: NonSerialized]
         SoundEffect JumpSound;
 
         enum State
@@ -35,11 +38,14 @@ namespace DragonGame1
 
         Vector2 _Direction = Vector2.Zero;
         Vector2 _Speed = Vector2.Zero;
+        [field:NonSerialized]
         private Texture2D SpriteTexture;
         public Vector2 Position = new Vector2(0, 0);
+        [field:NonSerialized]
         KeyboardState _PreviousKeyboardState;
 
         //Health texture og posision
+        [field:NonSerialized]
         private Texture2D heartTexture;
         public Rectangle heartPosition;
         public int health = 3;

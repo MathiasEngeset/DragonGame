@@ -9,11 +9,12 @@ using Microsoft.Xna.Framework.Graphics;
 namespace DragonGame1
 {
     [Serializable]
-    class GoldCoin
+    public class GoldCoin
     {
         const string COIN_ASSETNAME = "gold coins";
         public bool Visible = false;
         public Vector2 Position = new Vector2(0, 0);
+        [field:NonSerialized]
         private Texture2D SpriteTexture;
 
         public const int _frameSizeWidth = 27;

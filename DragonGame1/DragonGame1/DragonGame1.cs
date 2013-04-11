@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Storage;
@@ -15,6 +17,7 @@ namespace DragonGame1
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+    [Serializable]
     public class DragonGame1 : Microsoft.Xna.Framework.Game
     {
         SpriteFont UVfont;
@@ -91,7 +94,7 @@ namespace DragonGame1
         {
             UVfont = Content.Load<SpriteFont>("SpriteFont1");
             lizzy_elisabethan_period_music_track = Content.Load<Song>("lizzy_elizabethan_period_music_track");
-            medievalmusic_irishwake = Content.Load<Song>("medieval music-irish wake");
+            //medievalmusic_irishwake = Content.Load<Song>("medieval music-irish wake");
             MediaPlayer.IsRepeating = true;
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -249,6 +252,85 @@ namespace DragonGame1
                 {
                     MediaPlayer.Pause();
                     mutesong = true;
+                }
+            }
+
+            //***************************
+            //Saves and loads th game
+            //***************************
+            if (CurrentKeyboardState.IsKeyDown(Keys.S))
+            {
+                try
+                {
+                    using (Stream stream = File.Open("data.bin", FileMode.Create)) {
+
+                        Cargo cargoToSave = new Cargo()
+                        {
+                            //farBackgroundList = this.farBackgroundList,
+                            goldCoinList = this.goldCoinList,
+                            mdragonSprite = this.mdragonSprite,
+                            mdragonSprite2 = this.mdragonSprite2,
+                            mdragonSprite3 = this.mdragonSprite3,
+                            mKnightSprite = this.mKnightSprite
+                            //nearBackgroundList = this.nearBackgroundList,
+                            //walkinggroundList = this.walkinggroundList,
+                            //walkwayList = this.walkwayList};
+                        };
+                        
+                        BinaryFormatter bin = new BinaryFormatter();
+                        bin.Serialize(stream, cargoToSave);
+                    }
+                }
+                catch (IOException) { 
+                
+                }
+            }
+
+            if (CurrentKeyboardState.IsKeyDown(Keys.L))
+            {
+                try
+                {
+                    using (Stream stream = File.Open("data.bin", FileMode.Open))
+                    {
+                        BinaryFormatter bin = new BinaryFormatter();
+                        var loadCargo = (Cargo)bin.Deserialize(stream);
+
+                        mKnightSprite = loadCargo.mKnightSprite;
+                        var loadedKnightPos = loadCargo.mKnightSprite.Position;
+                        var loadedKnightHealth = loadCargo.mKnightSprite.health;
+                        mdragonSprite = loadCargo.mdragonSprite;
+                        var savedDragonSpritePos = loadCargo.mdragonSprite.Position;
+                        mdragonSprite2 = loadCargo.mdragonSprite2;
+                        var savedDragonSpritePos2 = loadCargo.mdragonSprite2.Position;
+                        mdragonSprite3 = loadCargo.mdragonSprite3;
+                        var savedDragonSpritePos3 = loadCargo.mdragonSprite3.Position;
+                        var savedDragonSpriteVisible = loadCargo.mdragonSprite3.GetIsVisible();
+                        goldCoinList = loadCargo.goldCoinList;
+
+                        //Loads texture, sound effects etc.
+                        mKnightSprite.LoadContent(this.Content);
+                        mKnightSprite.Position = loadedKnightPos;
+                        mKnightSprite.health = loadedKnightHealth;
+
+                        mdragonSprite.LoadContent(this.Content);
+                        mdragonSprite.Position = savedDragonSpritePos;
+
+                        mdragonSprite2.LoadContent(this.Content);
+                        mdragonSprite2.Position = savedDragonSpritePos2;
+
+                        mdragonSprite3.LoadContent(this.Content);
+                        mdragonSprite3.Position = savedDragonSpritePos3;
+                        mdragonSprite3.SetIsVisible(savedDragonSpriteVisible);
+             
+                        foreach (var coin in goldCoinList) {
+                            coin.LoadContent(this.Content);
+                        }
+                        
+                    }
+                }
+                catch (IOException)
+                {
+
                 }
             }
 

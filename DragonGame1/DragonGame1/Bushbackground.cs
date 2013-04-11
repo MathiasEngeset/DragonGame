@@ -9,9 +9,10 @@ using Microsoft.Xna.Framework.Graphics;
 namespace DragonGame1
 {
     [Serializable]
-    class Bushbackground
+    public class Bushbackground
     {
         public Vector2 Position = new Vector2(0, 0);
+        [field:NonSerialized]
         public Texture2D SpriteTexture;
 
         public Bushbackground() { }

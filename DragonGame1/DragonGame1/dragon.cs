@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace DragonGame1
 {
     [Serializable]
-    class dragon
+    public class dragon
     {
         enum State
         {
@@ -23,6 +23,7 @@ namespace DragonGame1
 
         Vector2 _Direction = Vector2.Zero;
         Vector2 _Speed = Vector2.Zero;
+        [field:NonSerialized]
         private Texture2D SpriteTexture;
         public Vector2 Position = new Vector2(0, 0);
         
@@ -43,6 +44,7 @@ namespace DragonGame1
         private int seed = 1;
         private bool _isVisible = false;
 
+        [field:NonSerialized]
         ContentManager _ContentManager;
 
         const string DRAGON_ASSETNAME = "dragonsheet";
