@@ -222,12 +222,12 @@ namespace DragonGame1
 
             KeyboardState CurrentKeyboardState = Keyboard.GetState();
 
-            if (CurrentKeyboardState.IsKeyDown(Keys.NumPad1))
+            if (CurrentKeyboardState.IsKeyDown(Keys.F1))
             {
                 MediaPlayer.Play(lizzy_elisabethan_period_music_track);
             }
 
-            if (CurrentKeyboardState.IsKeyDown(Keys.NumPad2))
+            if (CurrentKeyboardState.IsKeyDown(Keys.F2))
             {
                 MediaPlayer.Play(bakgrunnsmusikk_2);
             }
