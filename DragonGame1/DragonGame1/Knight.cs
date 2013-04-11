@@ -84,7 +84,7 @@ namespace DragonGame1
             JumpSound = theContentManager.Load<SoundEffect>("Jump");
             Position = new Vector2(START_POSITION_X, START_POSITION_Y);
             SpriteTexture = theContentManager.Load<Texture2D>(KNIGHT_ASSETNAME);
-            heartTexture = theContentManager.Load<Texture2D>("heart");
+            heartTexture = theContentManager.Load<Texture2D>("heart_full");
         }
 
         public void Update(GameTime theGameTime)
