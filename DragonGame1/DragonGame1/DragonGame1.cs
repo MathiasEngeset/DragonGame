@@ -21,11 +21,15 @@ namespace DragonGame1
     public class DragonGame1 : Microsoft.Xna.Framework.Game
     {
         SpriteFont UVfont;
+        SpriteFont countdownFont;
         Song lizzy_elisabethan_period_music_track;
         Song bakgrunnsmusikk_2;
         bool songstart = false;
         bool mutesong = false;
         int secondsBeforeSpeedUp = 30;
+        float countdown = 0; 
+        float countdownStartime = 180; //3min in seconds
+        string countdownString = string.Empty;
         private float totalElapsed = 0;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -95,10 +99,9 @@ namespace DragonGame1
         /// </summary>
         protected override void LoadContent()
         {
-            MediaLibrary ml = new MediaLibrary();
-            SongCollection sc = ml.Songs;
-
             UVfont = Content.Load<SpriteFont>("GameOverJingJing");
+            countdownFont = Content.Load<SpriteFont>("timerFont");
+
             lizzy_elisabethan_period_music_track = Content.Load<Song>("lizzy_elizabethan_period_music_track");
             bakgrunnsmusikk_2 = Content.Load<Song>("Bakgrunnsmusikk_2");
             MediaPlayer.IsRepeating = true;
@@ -383,6 +386,17 @@ namespace DragonGame1
             if (CurrentGameState == GameStates.Playing)
             {
                 totalElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                countdown = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                countdownStartime += -countdown;
+
+                //Iftime is up, GAME OVER
+                if (countdownStartime < 0)
+                {
+                    CurrentGameState = GameStates.GameOver;
+                }
+
+                //Updates time to be drawn to screen
+                countdownString = (int)countdownStartime / 60 + ":" + (int)countdownStartime % 60;
 
                 if (totalElapsed > secondsBeforeSpeedUp)
                 {
@@ -453,6 +467,7 @@ namespace DragonGame1
                     mKnightSprite.CollideWithGoldCoin(coin);
                 }
 
+                base.Update(gameTime);
             }
                 // Menu
 
@@ -479,7 +494,7 @@ namespace DragonGame1
                 }
 
 
-                base.Update(gameTime);
+                
             }
 
         
@@ -543,6 +558,7 @@ namespace DragonGame1
                 mdragonSprite.Draw(this.spriteBatch);
                 mdragonSprite2.Draw(this.spriteBatch);
                 mdragonSprite3.Draw(this.spriteBatch);
+                spriteBatch.DrawString(countdownFont, countdownString, new Vector2((graphics.GraphicsDevice.Viewport.Width - countdownFont.MeasureString(countdownString).X) / 2, graphics.GraphicsDevice.Viewport.Height - countdownFont.MeasureString(countdownString).Y), Color.White);
                         break;
 
                 case(GameStates.GameOver):
