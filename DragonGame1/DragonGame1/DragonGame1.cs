@@ -197,17 +197,17 @@ namespace DragonGame1
             IsMouseVisible = true;
 
             // Main menu
-            btnPlay = new cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
-            btnControls = new cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
-            btnQuit = new cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
+            btnPlay = new cButton(Content.Load<Texture2D>("PlayButton"), graphics.GraphicsDevice);
+            btnControls = new cButton(Content.Load<Texture2D>("ControlsButton"), graphics.GraphicsDevice);
+            btnQuit = new cButton(Content.Load<Texture2D>("QuitButton"), graphics.GraphicsDevice);
 
-            btnPlay.setPosition(new Vector2(400, 500));
-            btnControls.setPosition(new Vector2(400, 400));
-            btnQuit.setPosition(new Vector2(400, 600));
+            btnPlay.setPosition(new Vector2(400, 450));
+            btnControls.setPosition(new Vector2(400, 500));
+            btnQuit.setPosition(new Vector2(400, 550));
          
             // Options
-            btnPrevious = new cButton(Content.Load<Texture2D>("Button"), graphics.GraphicsDevice);
-            btnPrevious.setPosition(new Vector2(400, 700));
+            btnPrevious = new cButton(Content.Load<Texture2D>("BackButton"), graphics.GraphicsDevice);
+            btnPrevious.setPosition(new Vector2(400, 600));
             
         }
 
