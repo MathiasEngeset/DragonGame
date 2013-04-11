@@ -467,7 +467,7 @@ namespace DragonGame1
                     mKnightSprite.CollideWithGoldCoin(coin);
                 }
 
-                base.Update(gameTime);
+                
             }
                 // Menu
 
@@ -493,7 +493,7 @@ namespace DragonGame1
 
                 }
 
-
+                base.Update(gameTime);
                 
             }
 
@@ -511,7 +511,7 @@ namespace DragonGame1
             switch (CurrentGameState)
             {
                 case GameStates.MainMenu:
-                    spriteBatch.Draw(Content.Load<Texture2D>("MainBG"), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+                    spriteBatch.Draw(Content.Load<Texture2D>("KnightAndDragon"), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
                     btnPlay.Draw(spriteBatch);
                     btnControls.Draw(spriteBatch);
                     btnQuit.Draw(spriteBatch);
