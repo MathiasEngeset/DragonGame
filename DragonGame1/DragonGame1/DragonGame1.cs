@@ -683,6 +683,10 @@ namespace DragonGame1
                         btnRestart.Draw(spriteBatch);
                         btnQuit.Draw(spriteBatch);
                         break;
+                case GameStates.Options:
+                        spriteBatch.Draw(Content.Load<Texture2D>("controlsScreen"), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+                        btnPrevious.Draw(spriteBatch);
+                        break;
 
             }
             spriteBatch.End();
