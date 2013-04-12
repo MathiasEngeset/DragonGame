@@ -250,6 +250,8 @@ namespace DragonGame1
             mdragonSprite.setTotalElapsed(0);
             mKnightSprite2.setHealth(3);
             mKnightSprite.setHealth(3);
+            mKnightSprite2.SetScore(0);
+            mKnightSprite.SetScore(0);
             mKnightSprite.setPosition(new Vector2(125, 50));
             mKnightSprite2.setPosition(new Vector2(125, 50));
             mKnightSprite.setTimeElapsed(0);

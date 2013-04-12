@@ -467,6 +467,10 @@ namespace DragonGame1
             return score;
         }
 
+        public void SetScore(int setScore) {
+            score = setScore;
+        }
+
         public void setHealth(int health)
         {
             this.health = health;
