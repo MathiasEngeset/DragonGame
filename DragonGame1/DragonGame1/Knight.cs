@@ -434,7 +434,7 @@ namespace DragonGame1
 
                             //Draws the score.
                             var scoreText = "Score: " + score;
-                            theSpriteBatch.DrawString(scoreFont, scoreText, new Vector2(960, 50), Color.White);
+                            theSpriteBatch.DrawString(scoreFont, scoreText, new Vector2(800, 50), Color.White);
                         }
                     }
                     
