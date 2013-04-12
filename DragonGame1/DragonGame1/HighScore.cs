@@ -28,6 +28,6 @@ namespace DragonGame1
     [Serializable]
     public class Score {
         public string PlayerName { get; set; }
-        public int Score { get; set; }
+        public int Points { get; set; }
     }
 }
