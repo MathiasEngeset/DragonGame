@@ -15,15 +15,18 @@ using Microsoft.Xna.Framework.Media;
 namespace DragonGame1
 {
     class cButton
-    {
+    {   
+        
         Texture2D texture;
         Vector2 position;
         Rectangle rectangle;
 
+        // Color of menu buttons
         Color colour = new Color(255, 255, 255, 255);
 
         public Vector2 size;
 
+        
         public cButton(Texture2D newTexture, GraphicsDevice graphics)
         {
             texture = newTexture;
@@ -40,6 +43,7 @@ namespace DragonGame1
 
             Rectangle mouseRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
 
+            // Checks if left click is pressed & animates the color according to what the current state of the color is.
             if (mouseRectangle.Intersects(rectangle))
             {
                 if (colour.A == 255) down = false;

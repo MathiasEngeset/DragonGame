@@ -44,6 +44,12 @@ namespace DragonGame1
         List<walkingground> walkwayList;
         List<GoldCoin> goldCoinList;
 
+        // Menu Buttons 
+        cButton btnPlay;
+        cButton btnControls;
+        cButton btnQuit;
+        cButton btnPrevious;
+
         enum GameStates
         {
             Paused,
@@ -52,13 +58,9 @@ namespace DragonGame1
             Options,
             GameOver
         }
-        // GameStates CurrentGameState = GameStates.Playing;
+        
+        // Selecting the starting Gamestate
         GameStates CurrentGameState = GameStates.MainMenu;
-
-        cButton btnPlay;
-        cButton btnControls;
-        cButton btnQuit;
-        cButton btnPrevious;
 
 
         int screenWidth = 1024, screenHeight = 768;
@@ -67,8 +69,7 @@ namespace DragonGame1
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-       //     graphics.PreferredBackBufferHeight = 768;
-       //     graphics.PreferredBackBufferWidth = 1024;
+
         }
 
         /// <summary>
@@ -194,6 +195,8 @@ namespace DragonGame1
             mdragonSprite3.LoadContent(this.Content);
             mdragonSprite3.SetIsVisible(false);
 
+            IsMouseVisible = true;
+
            
             // Resolution Settings
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -202,9 +205,6 @@ namespace DragonGame1
             graphics.PreferredBackBufferHeight = screenHeight;
 
             graphics.ApplyChanges();
-
-            // Menu button
-            IsMouseVisible = true;
 
             // Main menu
             btnPlay = new cButton(Content.Load<Texture2D>("PlayButton"), graphics.GraphicsDevice);
@@ -215,7 +215,7 @@ namespace DragonGame1
             btnControls.setPosition(new Vector2(450, 500));
             btnQuit.setPosition(new Vector2(450, 550));
          
-            // Options
+            // Menu - Options
             btnPrevious = new cButton(Content.Load<Texture2D>("BackButton"), graphics.GraphicsDevice);
             btnPrevious.setPosition(new Vector2(400, 700));
             
@@ -513,13 +513,15 @@ namespace DragonGame1
 
                 
             }
-                // Menu
+                // Menu - Mouse Clicks
 
                 MouseState mouse = Mouse.GetState();
 
                 switch (CurrentGameState)
                 {
                     case GameStates.MainMenu:
+
+                        // Main Menu Buttons
                         if (btnPlay.isClicked == true) CurrentGameState = GameStates.Playing;
                         if (btnControls.isClicked == true) CurrentGameState = GameStates.Options;
                         if (btnQuit.isClicked == true) this.Exit();
@@ -531,6 +533,8 @@ namespace DragonGame1
 
                         break;
                     case GameStates.Options:
+
+                        // Options Buttons
                         if (btnPrevious.isClicked == true) CurrentGameState = GameStates.MainMenu;
                         btnPrevious.Update(mouse);
                         break;
@@ -555,22 +559,19 @@ namespace DragonGame1
             switch (CurrentGameState)
             {
                 case GameStates.MainMenu:
+                    // Main Menu Drawing
                     spriteBatch.Draw(Content.Load<Texture2D>("KnightAndDragon"), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
                     btnPlay.Draw(spriteBatch);
                     btnControls.Draw(spriteBatch);
                     btnQuit.Draw(spriteBatch);
-
-                    break;
-
+                     break;
 
                 case (GameStates.Options):
-
-                    // Draw control options.
-
+                    // Controls Menu Drawing
                     btnPrevious.Draw(spriteBatch);
                     break;
                 case GameStates.Playing:
-                    // Gameplay
+                    // Gameplay Drawing
                     
                 foreach (Bushbackground background in farBackgroundList)
                 {
@@ -617,8 +618,6 @@ namespace DragonGame1
                 case(GameStates.GameOver):
                         spriteBatch.DrawString(UVfont, "Game Over", new Vector2((graphics.GraphicsDevice.Viewport.Width - UVfont.MeasureString("Game Over").X) / 2, graphics.GraphicsDevice.Viewport.Height / 2), Color.White);
                         break;
-
-   
 
             }
             spriteBatch.End();
