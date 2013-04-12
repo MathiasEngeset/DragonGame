@@ -22,6 +22,9 @@ namespace DragonGame1
         SoundEffect CoinSound;
         [field: NonSerialized]
         SoundEffect JumpSound;
+        List<GoldCoin> goldCoinList;
+        HUD hud;
+        private String knight;
 
         enum State
         {
@@ -40,8 +43,6 @@ namespace DragonGame1
         Vector2 _Speed = Vector2.Zero;
         [field:NonSerialized]
         private Texture2D SpriteTexture;
-        [field: NonSerialized]
-        private SpriteFont scoreFont;
         public Vector2 Position = new Vector2(0, 0);
         [field:NonSerialized]
         KeyboardState _PreviousKeyboardState;
@@ -51,11 +52,7 @@ namespace DragonGame1
         private Texture2D heartTexture;
         public Rectangle heartPosition;
         public int health = 3;
-        private int score = 0;
-
-        //Status and id.
-        private bool isActive = false;
-        private int id = 1;
+        
 
         private const int _knightFrameSizeWidth = 169;
         private const int _knightFrameSizeHeight = 144;
@@ -82,13 +79,12 @@ namespace DragonGame1
         //load methode
         public void LoadContent(ContentManager theContentManager)
         {
-            scoreFont = theContentManager.Load<SpriteFont>("timerFont");
             Explotion = theContentManager.Load<SoundEffect>("explosion_2");
             CoinSound = theContentManager.Load<SoundEffect>("Coin_Sound_Effect");
             JumpSound = theContentManager.Load<SoundEffect>("Jump");
             Position = new Vector2(START_POSITION_X, START_POSITION_Y);
             SpriteTexture = theContentManager.Load<Texture2D>(KNIGHT_ASSETNAME);
-            heartTexture = theContentManager.Load<Texture2D>("heart_full");
+            heartTexture = theContentManager.Load<Texture2D>("heart");
         }
 
         public void Update(GameTime theGameTime)
@@ -116,18 +112,9 @@ namespace DragonGame1
             if (_CurrentState == State.Walking) { 
             }
 
-            if (this.id == 1)
+            if (aCurrentKeyboardState.IsKeyDown(Keys.Space) == true && _PreviousKeyboardState.IsKeyDown(Keys.Space) == false)
             {
-                if (aCurrentKeyboardState.IsKeyDown(Keys.Space) == true && _PreviousKeyboardState.IsKeyDown(Keys.Space) == false)
-                {
-                    Jump();
-                }
-            }
-            else {
-                if (aCurrentKeyboardState.IsKeyDown(Keys.W) == true && _PreviousKeyboardState.IsKeyDown(Keys.W) == false)
-                {
-                    Jump();
-                }
+                Jump();
             }
 
             if (_CurrentState == State.Jumping)
@@ -170,121 +157,58 @@ namespace DragonGame1
                 _Speed = Vector2.Zero;
                 _Direction = Vector2.Zero;
 
-                //if player 1
-                if (this.id == 1)
+                if (aCurrentKeyboardState.IsKeyDown(Keys.Left) == true)
                 {
-                    if (aCurrentKeyboardState.IsKeyDown(Keys.Left) == true)
+                    if (Position.X < 0)
                     {
-                        if (Position.X < 0)
+                        _Speed.X = 0;
+                        _Direction.X = 0;
+                    }
+                    else
+                    {
+                        _Speed.X = KNIGHT_SPEED;
+                        _Direction.X = MOVE_LEFT;
+                    }
+                    if (_totalElapsed > _timePerFrame)
+                    {
+                        if (frameCounter >= 2)
                         {
-                            _Speed.X = 0;
-                            _Direction.X = 0;
+                            frameCounter = 0;
                         }
                         else
                         {
-                            _Speed.X = KNIGHT_SPEED;
-                            _Direction.X = MOVE_LEFT;
+                            frameCounter++;
                         }
-                        if (_totalElapsed > _timePerFrame)
-                        {
-                            if (frameCounter >= 2)
-                            {
-                                frameCounter = 0;
-                            }
-                            else
-                            {
-                                frameCounter++;
-                            }
-                            _totalElapsed -= _timePerFrame;
-                        }
-                        _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
+                        _totalElapsed -= _timePerFrame;
                     }
-
-                    else if (aCurrentKeyboardState.IsKeyDown(Keys.Right) == true)
-                    {
-                        if (Position.X > (1024 - _knightFrameSizeWidth))
-                        {
-                            _Speed.X = 0;
-                            _Direction.X = 0;
-                        }
-                        else
-                        {
-                            _Speed.X = KNIGHT_SPEED;
-                            _Direction.X = MOVE_RIGHT;
-                        }
-
-                        if (_totalElapsed > _timePerFrame)
-                        {
-                            if (frameCounter <= 3)
-                            {
-                                frameCounter = 5;
-                            }
-                            else
-                            {
-                                frameCounter--;
-                            }
-                            _totalElapsed -= _timePerFrame;
-                        }
-                        _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
-                    }
+                    _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
                 }
-                else
+
+                else if (aCurrentKeyboardState.IsKeyDown(Keys.Right) == true)
                 {
-                    //if player 2
-                    if (aCurrentKeyboardState.IsKeyDown(Keys.A) == true)
+                    if (Position.X > (1024 - _knightFrameSizeWidth))
                     {
-                        if (Position.X < 0)
+                        _Speed.X = 0;
+                        _Direction.X = 0;
+                    }
+                    else {
+                        _Speed.X = KNIGHT_SPEED;
+                        _Direction.X = MOVE_RIGHT;
+                    }
+                    
+                    if (_totalElapsed > _timePerFrame)
+                    {
+                        if (frameCounter <= 3)
                         {
-                            _Speed.X = 0;
-                            _Direction.X = 0;
+                            frameCounter = 5;
                         }
                         else
                         {
-                            _Speed.X = KNIGHT_SPEED;
-                            _Direction.X = MOVE_LEFT;
+                            frameCounter--;
                         }
-                        if (_totalElapsed > _timePerFrame)
-                        {
-                            if (frameCounter >= 2)
-                            {
-                                frameCounter = 0;
-                            }
-                            else
-                            {
-                                frameCounter++;
-                            }
-                            _totalElapsed -= _timePerFrame;
-                        }
-                        _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
+                        _totalElapsed -= _timePerFrame;
                     }
-
-                    else if (aCurrentKeyboardState.IsKeyDown(Keys.D) == true)
-                    {
-                        if (Position.X > (1024 - _knightFrameSizeWidth))
-                        {
-                            _Speed.X = 0;
-                            _Direction.X = 0;
-                        }
-                        else
-                        {
-                            _Speed.X = KNIGHT_SPEED;
-                            _Direction.X = MOVE_RIGHT;
-                        }
-
-                        if (_totalElapsed > _timePerFrame)
-                        {
-                            if (frameCounter <= 3)
-                            {
-                                frameCounter = 5;
-                            }
-                            else
-                            {
-                                frameCounter--;
-                            }
-                            _totalElapsed -= _timePerFrame;
-                        }
-                        _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
-                    }
+                    _knightCurrentFrameX = _knightFrameSizeWidth * frameCounter;
                 }
             }
         }
@@ -398,13 +322,29 @@ namespace DragonGame1
         public void CollideWithGoldCoin(GoldCoin coin)
         {
             Rectangle knightRectangle = new Rectangle((int)Position.X, (int)Position.Y, _knightFrameSizeWidth, _knightFrameSizeHeight);
-            Rectangle coinRecktangle = new Rectangle((int)coin.Position.X, (int)coin.Position.Y, coin.GetWidth(), coin.GetHeight());
-            if (knightRectangle.Intersects(coinRecktangle))
+            Rectangle coinRectangle = new Rectangle((int)coin.Position.X, (int)coin.Position.Y, coin.GetWidth(), coin.GetHeight());
+            if (knightRectangle.Intersects(coinRectangle))
             {
                 coin.GenerateNewPosition();
                 CoinSound.Play();
-                score += 10;
+                //Todo: get point for getting coin
             }
+
+            GoldCoin toRemove = null;
+
+            foreach (GoldCoin GoldCoin in goldCoinList)
+            {
+                if (knightRectangle.Intersects(coinRectangle))
+                {
+                    toRemove = coin;
+                    hud.Score += 10;    // Add 10 to the Score
+                    break;
+                }
+            }
+
+            if (toRemove != null)
+                goldCoinList.Remove(toRemove);
+
         }
 
         //draw the sprite to the screen
@@ -415,58 +355,13 @@ namespace DragonGame1
                 int hjerteSomTegnes = 0;
                 for (int i = 0; i < health; i++)
                 {
-                    if (this.id == 1) //Player 1
-                    {
-                        heartPosition = new Rectangle(10 + hjerteSomTegnes, 10, 60, 50);
-                        theSpriteBatch.Draw(heartTexture, heartPosition, Color.White);
-                        hjerteSomTegnes += 60;
-                        
-                        //Draws the score.
-                        var scoreText = "Score: " + score;
-                        theSpriteBatch.DrawString(scoreFont, scoreText, new Vector2(10, 50), Color.White); 
-                    }
-                    else { //Player 2
-                        if (this.isActive)
-                        {
-                            heartPosition = new Rectangle(960 - hjerteSomTegnes, 10, 60, 50);
-                            theSpriteBatch.Draw(heartTexture, heartPosition, Color.White);
-                            hjerteSomTegnes += 60;
-
-                            //Draws the score.
-                            var scoreText = "Score: " + score;
-                            theSpriteBatch.DrawString(scoreFont, scoreText, new Vector2(960, 50), Color.White);
-                        }
-                    }
-                    
+                    heartPosition = new Rectangle(10 + hjerteSomTegnes, 10, 60, 50);
+                    theSpriteBatch.Draw(heartTexture, heartPosition, Color.White);
+                    hjerteSomTegnes += 60;
                 }
             }
             theSpriteBatch.Draw(SpriteTexture, Position, new Rectangle(_knightCurrentFrameX, _knightCurrentFrameY, _knightFrameSizeWidth, _knightFrameSizeHeight), color);
         }
-
-        //***********************
-        //getter/setter
-        //***********************
-
-        public void SetIsActive(bool active) {
-            this.isActive = active;
-        }
-
-        public bool GetIsActive() {
-            return this.isActive;
-        }
-
-        public void SetId(int id) {
-            this.id = id;
-        }
-
-        public int GetId() {
-            return this.id;
-        }
-
-        public int GetScore() {
-            return score;
-        }
-
 
     }//END CLASS
 }
