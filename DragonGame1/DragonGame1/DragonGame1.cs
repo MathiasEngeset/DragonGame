@@ -256,6 +256,7 @@ namespace DragonGame1
             mKnightSprite2.setPosition(new Vector2(125, 50));
             mKnightSprite.setTimeElapsed(0);
             mKnightSprite2.SetIsActive(false);
+            countdownStartime = 180;
         }
         protected override void Update(GameTime gameTime)
         {
@@ -657,7 +658,28 @@ namespace DragonGame1
                     btnRestart.Draw(spriteBatch);
                         break;
                 case(GameStates.GameOver):
-                        spriteBatch.DrawString(UVfont, "Game Over", new Vector2((graphics.GraphicsDevice.Viewport.Width - UVfont.MeasureString("Game Over").X) / 2, graphics.GraphicsDevice.Viewport.Height / 2), Color.White);
+                        if (countdownStartime > 0)
+                        {
+                            spriteBatch.DrawString(UVfont, "Game Over", new Vector2((graphics.GraphicsDevice.Viewport.Width - UVfont.MeasureString("Game Over").X) / 2, 0), Color.White);
+                            spriteBatch.DrawString(UVfont, "You lost", new Vector2((graphics.GraphicsDevice.Viewport.Width - UVfont.MeasureString("You lost").X) / 2, UVfont.MeasureString("Game Over").Y), Color.White);
+                        }
+                        else {
+                            if (!mKnightSprite2.GetIsActive())
+                            {
+                                spriteBatch.DrawString(UVfont, "You won", new Vector2((graphics.GraphicsDevice.Viewport.Width - UVfont.MeasureString("You won").X) / 2, 0), Color.White);
+                                spriteBatch.DrawString(UVfont, "Score: " + mKnightSprite.GetScore().ToString(), new Vector2((graphics.GraphicsDevice.Viewport.Width - UVfont.MeasureString("Score: " + mKnightSprite.GetScore().ToString()).X) / 2, UVfont.MeasureString("You won").Y), Color.White);
+                            }
+                            else {
+                                if (mKnightSprite2.GetScore() > mKnightSprite.GetScore())
+                                {
+                                    spriteBatch.DrawString(UVfont, "Player 2 won", new Vector2((graphics.GraphicsDevice.Viewport.Width - UVfont.MeasureString("Player 2 won").X) / 2, 0), Color.White);
+                                }
+                                else {
+                                    spriteBatch.DrawString(UVfont, "Player 1 won", new Vector2((graphics.GraphicsDevice.Viewport.Width - UVfont.MeasureString("Player 1 won").X) / 2, 0), Color.White);
+                                }
+                            }
+                           }
+
                         btnRestart.Draw(spriteBatch);
                         btnQuit.Draw(spriteBatch);
                         break;
