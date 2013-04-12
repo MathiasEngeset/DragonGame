@@ -382,6 +382,17 @@ namespace DragonGame1
             return _isVisible;
         }
 
+        public void setTotalElapsed(float totalElapsed)
+        {
+            this._totalElapsed = totalElapsed;
+        }
+
+        public void setPosition(Vector2 dragonPos)
+        {
+            this.Position = dragonPos;
+        }
+
+
     }//END CLASS
 }
 

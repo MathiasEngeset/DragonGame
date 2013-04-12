@@ -467,6 +467,26 @@ namespace DragonGame1
             return score;
         }
 
+        public void setHealth(int health)
+        {
+            this.health = health;
+        }
+
+        public int getHealth()
+        {
+            return this.health;
+        }
+
+        public void setPosition(Vector2 position)
+        {
+            this.Position = position;
+        }
+
+        public void setTimeElapsed(float elapsed)
+        {
+            this._totalElapsed = elapsed;
+        }
+
 
     }//END CLASS
 }

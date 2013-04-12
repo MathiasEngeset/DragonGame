@@ -44,12 +44,15 @@ namespace DragonGame1
         List<walkingground> walkinggroundList;
         List<walkingground> walkwayList;
         List<GoldCoin> goldCoinList;
+        KeyboardState CurrentKeyboardState;
+        KeyboardState previousKeyboardState;
 
         // Menu Buttons 
         cButton btnPlay;
         cButton btnControls;
         cButton btnQuit;
         cButton btnPrevious;
+        cButton btnRestart;
 
         enum GameStates
         {
@@ -211,11 +214,12 @@ namespace DragonGame1
             btnPlay = new cButton(Content.Load<Texture2D>("PlayButton"), graphics.GraphicsDevice);
             btnControls = new cButton(Content.Load<Texture2D>("ControlsButton"), graphics.GraphicsDevice);
             btnQuit = new cButton(Content.Load<Texture2D>("QuitButton"), graphics.GraphicsDevice);
+            btnRestart = new cButton(Content.Load<Texture2D>("RestartButton"), graphics.GraphicsDevice);
 
             btnPlay.setPosition(new Vector2(450, 450));
             btnControls.setPosition(new Vector2(450, 500));
             btnQuit.setPosition(new Vector2(450, 550));
-         
+            btnRestart.setPosition(new Vector2(450, 450));
             // Menu - Options
             btnPrevious = new cButton(Content.Load<Texture2D>("BackButton"), graphics.GraphicsDevice);
             btnPrevious.setPosition(new Vector2(400, 700));
@@ -236,8 +240,25 @@ namespace DragonGame1
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
+
+        public void restart()
+        {
+            Random rand = new Random();
+            mdragonSprite.setPosition(new Vector2(rand.Next(200, 850), -200));
+            mdragonSprite.setTotalElapsed(0);
+            mKnightSprite2.setHealth(3);
+            mKnightSprite.setHealth(3);
+            mKnightSprite.setPosition(new Vector2(125, 50));
+            mKnightSprite2.setPosition(new Vector2(125, 50));
+            mKnightSprite.setTimeElapsed(0);
+            mKnightSprite2.SetIsActive(false);
+        }
         protected override void Update(GameTime gameTime)
         {
+
+            previousKeyboardState = CurrentKeyboardState;
+            CurrentKeyboardState = Keyboard.GetState();
+
             if (!songstart)
             {
                 MediaPlayer.Play(lizzy_elisabethan_period_music_track);
@@ -246,7 +267,7 @@ namespace DragonGame1
             }
 
 
-            KeyboardState CurrentKeyboardState = Keyboard.GetState();
+           
 
             if (CurrentKeyboardState.IsKeyDown(Keys.F1) && songstart)
             {
@@ -278,7 +299,7 @@ namespace DragonGame1
             //Pause gameplay
             if (CurrentGameState == GameStates.Playing)
             {
-                if (CurrentKeyboardState.IsKeyDown(Keys.P))
+                if (CurrentKeyboardState.IsKeyDown(Keys.P) && previousKeyboardState.IsKeyUp(Keys.P))
                 {
                     MediaPlayer.Pause();
                     CurrentGameState = GameStates.Paused;
@@ -286,7 +307,7 @@ namespace DragonGame1
             }
             else if (CurrentGameState == GameStates.Paused)
             {
-                if (CurrentKeyboardState.IsKeyDown(Keys.P))
+                if (CurrentKeyboardState.IsKeyDown(Keys.P) && previousKeyboardState.IsKeyUp(Keys.P))
                 {
                     MediaPlayer.Resume();
                     CurrentGameState = GameStates.Playing;
@@ -294,7 +315,7 @@ namespace DragonGame1
             }
 
             //mute/unmute
-            if (CurrentKeyboardState.IsKeyDown(Keys.F10))
+            if (CurrentKeyboardState.IsKeyDown(Keys.F10) && previousKeyboardState.IsKeyUp(Keys.F10))
             {
                 if (mutesong)
                 {
@@ -530,8 +551,10 @@ namespace DragonGame1
                         btnControls.Update(mouse);
                         btnQuit.Update(mouse);
                         break;
+                   
                     case GameStates.Playing:
-
+                        btnRestart.isClicked = false;
+                        if (mKnightSprite.getHealth() == 0) CurrentGameState = GameStates.GameOver;
                         break;
                     case GameStates.Options:
 
@@ -540,6 +563,21 @@ namespace DragonGame1
                         btnPrevious.Update(mouse);
                         break;
 
+                    case GameStates.GameOver:
+                        if (btnQuit.isClicked == true) this.Exit();
+                        if (btnRestart.isClicked == true) { restart(); MediaPlayer.Resume(); CurrentGameState = GameStates.Playing; }
+                            btnRestart.Update(mouse);
+                            btnQuit.Update(mouse);
+                        
+                        break;
+
+                    case GameStates.Paused:
+
+                        if (btnQuit.isClicked == true) this.Exit();
+                        if (btnRestart.isClicked == true) { restart(); MediaPlayer.Resume(); CurrentGameState = GameStates.Playing; }
+                        btnQuit.Update(mouse);
+                        btnRestart.Update(mouse);
+                        break;
                 }
 
                 base.Update(gameTime);
@@ -557,23 +595,8 @@ namespace DragonGame1
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            switch (CurrentGameState)
+            if (CurrentGameState == GameStates.Playing || CurrentGameState == GameStates.Paused)
             {
-                case GameStates.MainMenu:
-                    // Main Menu Drawing
-                    spriteBatch.Draw(Content.Load<Texture2D>("KnightAndDragon"), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
-                    btnPlay.Draw(spriteBatch);
-                    btnControls.Draw(spriteBatch);
-                    btnQuit.Draw(spriteBatch);
-                     break;
-
-                case (GameStates.Options):
-                    // Controls Menu Drawing
-                    btnPrevious.Draw(spriteBatch);
-                    break;
-                case GameStates.Playing:
-                    // Gameplay Drawing
-                    
                 foreach (Bushbackground background in farBackgroundList)
                 {
                     background.Draw(spriteBatch);
@@ -604,7 +627,8 @@ namespace DragonGame1
                 {
                     mKnightSprite2.Draw(this.spriteBatch);
                 }
-                else {
+                else
+                {
                     var start2playerText = "Hit F9 for player 2";
                     spriteBatch.DrawString(countdownFont, start2playerText, new Vector2((graphics.GraphicsDevice.Viewport.Width - countdownFont.MeasureString(start2playerText).X), graphics.GraphicsDevice.Viewport.Height - countdownFont.MeasureString(start2playerText).Y), Color.White);
                 }
@@ -614,10 +638,24 @@ namespace DragonGame1
                 mdragonSprite2.Draw(this.spriteBatch);
                 mdragonSprite3.Draw(this.spriteBatch);
                 spriteBatch.DrawString(countdownFont, countdownString, new Vector2((graphics.GraphicsDevice.Viewport.Width - countdownFont.MeasureString(countdownString).X) / 2, graphics.GraphicsDevice.Viewport.Height - countdownFont.MeasureString(countdownString).Y), Color.White);
+            }
+            
+            switch (CurrentGameState)
+            {
+                case GameStates.MainMenu:
+                    spriteBatch.Draw(Content.Load<Texture2D>("KnightAndDragon"), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+                    btnPlay.Draw(spriteBatch);
+                    btnControls.Draw(spriteBatch);
+                    btnQuit.Draw(spriteBatch);
+                    break;
+                case GameStates.Paused:
+                    btnQuit.Draw(spriteBatch);
+                    btnRestart.Draw(spriteBatch);
                         break;
-
                 case(GameStates.GameOver):
                         spriteBatch.DrawString(UVfont, "Game Over", new Vector2((graphics.GraphicsDevice.Viewport.Width - UVfont.MeasureString("Game Over").X) / 2, graphics.GraphicsDevice.Viewport.Height / 2), Color.White);
+                        btnRestart.Draw(spriteBatch);
+                        btnQuit.Draw(spriteBatch);
                         break;
 
             }
