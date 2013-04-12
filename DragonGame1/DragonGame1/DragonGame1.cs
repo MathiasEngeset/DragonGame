@@ -44,6 +44,7 @@ namespace DragonGame1
         List<walkingground> walkinggroundList;
         List<walkingground> walkwayList;
         List<GoldCoin> goldCoinList;
+        List<Score> highScoreList; 
         KeyboardState CurrentKeyboardState;
         KeyboardState previousKeyboardState;
 
@@ -100,7 +101,8 @@ namespace DragonGame1
             mdragonSprite = new dragon(35);
             mdragonSprite2 = new dragon(15);
             mdragonSprite3 = new dragon(25);
-       
+            highScoreList = GetHighScore();
+
             base.Initialize();
         }
 
@@ -663,5 +665,44 @@ namespace DragonGame1
             base.Draw(gameTime);
         }
 
+
+        //*********************************
+        //Save and load of highscore
+        //*********************************
+
+        private void SaveHighScore(){
+            try
+                {
+                    using (Stream stream = File.Open("highscore.bin", FileMode.Create)) {
+
+                        HighScore highScoreToSave = new HighScore();
+                        highScoreToSave.SetHighScore(this.highScoreList);
+                        
+                        BinaryFormatter bin = new BinaryFormatter();
+                        bin.Serialize(stream, highScoreToSave);
+                    }
+                }
+                catch (IOException) { 
+                
+                }
+        }
+              
+        private List<Score> GetHighScore(){
+            try
+            {
+                using (Stream stream = File.Open("highscore.bin", FileMode.Open))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    var loadHighScore = (HighScore)bin.Deserialize(stream);
+                    return loadHighScore.GetHighScore();
+                }
+            }
+            catch (IOException)
+            {
+                return new List<Score>();
+            }
+        }  
+
+            
     }
 }
